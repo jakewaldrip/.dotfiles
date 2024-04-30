@@ -1,7 +1,10 @@
+#!/bin/bash
+
 # Shorthand
 
 # We're on mac
-if [ "$(uname)" == "Darwin"]; then
+if [ "$(uname)"=="Darwin" ];
+then
   alias copy="tr -d '\n' | pbcopy"
 fi
 
