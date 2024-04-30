@@ -15,3 +15,4 @@
   * [ ] Create install script for Ubuntu
   * [ ] Create install script for WSL2
 * [ ] Add `this-env.sh` automatic creation to installation to prevent error when sourcing
+* [ ] Add font setup (or at least link to font in install script)
