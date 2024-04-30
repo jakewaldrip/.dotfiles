@@ -3,7 +3,7 @@
 2. `./.dotfiles/install/install.sh` (Currently Mac only)
 3. Follow instructions on screen
 
-# Temporary (Until Install Scripts Completed)
+### Temporary Extra Installation (Until Install Scripts Completed)
 1. `brew install stow`
 2. `cd .dotfiles`
 3. `stow .`
