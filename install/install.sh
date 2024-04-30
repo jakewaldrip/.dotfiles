@@ -29,7 +29,7 @@ then
 fi
 
 # Make
-if ! command -v git &> /dev/null
+if ! command -v make &> /dev/null
 then
   echo "Make not found, installing via homebrew"
   brew install make
