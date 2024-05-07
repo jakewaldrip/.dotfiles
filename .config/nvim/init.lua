@@ -620,7 +620,8 @@ require('lazy').setup({
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
   -- Visualize Git Conflicts and add keymaps
-  { 'akinsho/git-conflict.nvim', version = '*', config = true },
+  -- { 'akinsho/git-conflict.nvim', tag = '*', config = true },
+  { 'rhysd/conflict-marker.vim' },
 
   -- Code Minimap
   {
