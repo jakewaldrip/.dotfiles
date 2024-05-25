@@ -97,6 +97,9 @@ vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
 -- Open config
 vim.keymap.set('n', '<leader>nc', ':e ~/.config/nvim/init.lua<cr>', { desc = 'Open init.lua configuration' })
 
+-- Format via eslint
+vim.keymap.set('n', '<leader>nf', ':EslintFixAll<CR>', { desc = 'Run Eslint for file' })
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
