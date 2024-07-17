@@ -8,6 +8,10 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = true
 
+-- Disable netrw by default (fooling vim into thinking it's already loaded)
+vim.g.loaded_netrwPlugin = 1
+vim.g.loaded_netrw = 1
+
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -15,7 +19,7 @@ vim.g.have_nerd_font = true
 
 -- Make line numbers default
 vim.opt.number = true
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -128,6 +132,9 @@ vim.keymap.set('n', '<leader>nz', ':ZenMode<CR>', { desc = 'Toggle Zen Mode' })
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>y', '"+y', { noremap = true, silent = true, desc = 'Yank selection to system clipboard' })
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>Y', '"+yy', { noremap = true, silent = true, desc = 'Yank line to system clipboard' })
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>p', '"+p', { noremap = true, silent = true, desc = 'Paste to system clipboard' })
+
+-- Toggle Relative Line Numbers
+vim.keymap.set('n', '<leader>nr', ':set invrelativenumber<CR>', { desc = 'Toggle relative line numbers' })
 
 -- Enable closing help/popup windows with q instead of :q
 vim.api.nvim_create_autocmd({ 'FileType' }, {
@@ -364,6 +371,19 @@ require('lazy').setup({
     end,
   },
 
+  { -- Enable copilot
+    'zbirenbaum/copilot.lua',
+    cmd = 'Copilot',
+    event = 'InsertEnter',
+    config = function()
+      require('copilot').setup {
+        suggestion = {
+          auto_trigger = true,
+        },
+      }
+    end,
+  },
+
   { -- Autoformat
     'stevearc/conform.nvim',
     lazy = false,
@@ -447,7 +467,24 @@ require('lazy').setup({
 
           -- More traditional autocomplete mappings
           ['<CR>'] = cmp.mapping.confirm { select = true },
-          ['<Tab>'] = cmp.mapping.select_next_item(),
+
+          -- Workaround for allowing <Tab> to accept copilot suggestions
+          ['<Tab>'] = cmp.mapping(function(fallback)
+            if require('copilot.suggestion').is_visible() then
+              require('copilot.suggestion').accept()
+            elseif cmp.visible() then
+              cmp.select_next_item { behavior = cmp.SelectBehavior.Insert }
+            elseif luasnip.expandable() then
+              luasnip.expand()
+            elseif cmp.has_words_before() then
+              cmp.complete()
+            else
+              fallback()
+            end
+          end, {
+            'i',
+            's',
+          }),
           ['<S-Tab>'] = cmp.mapping.select_prev_item(),
 
           -- Manually trigger a completion from nvim-cmp.
