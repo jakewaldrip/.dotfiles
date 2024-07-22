@@ -476,8 +476,6 @@ require('lazy').setup({
               cmp.select_next_item { behavior = cmp.SelectBehavior.Insert }
             elseif luasnip.expandable() then
               luasnip.expand()
-            elseif cmp.has_words_before() then
-              cmp.complete()
             else
               fallback()
             end
