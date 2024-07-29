@@ -126,7 +126,7 @@ vim.keymap.set('n', '<c-p>', '<Plug>(YankyPreviousEntry)')
 vim.keymap.set('n', '<c-n>', '<Plug>(YankyNextEntry)')
 
 -- Toggle Zen Mode
-vim.keymap.set('n', '<leader>nz', ':ZenMode<CR>', { desc = 'Toggle Zen Mode' })
+vim.keymap.set('n', '<leader>tz', ':ZenMode<CR>', { desc = 'Toggle Zen Mode' })
 
 -- System Clipboard interactions
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>y', '"+y', { noremap = true, silent = true, desc = 'Yank selection to system clipboard' })
@@ -134,7 +134,7 @@ vim.keymap.set({ 'n', 'v', 'x' }, '<leader>Y', '"+yy', { noremap = true, silent 
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>p', '"+p', { noremap = true, silent = true, desc = 'Paste to system clipboard' })
 
 -- Toggle Relative Line Numbers
-vim.keymap.set('n', '<leader>nr', ':set invrelativenumber<CR>', { desc = 'Toggle relative line numbers' })
+vim.keymap.set('n', '<leader>tr', ':set invrelativenumber<CR>', { desc = 'Toggle relative line numbers' })
 
 -- Enable closing help/popup windows with q instead of :q
 vim.api.nvim_create_autocmd({ 'FileType' }, {
@@ -174,14 +174,15 @@ require('lazy').setup({
       require('which-key').setup()
 
       -- Document existing key chains
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-        ['<leader>n'] = { name = 'Custom', _ = 'which_key_ignore' },
-        ['<leader>h'] = { name = 'Git', _ = 'which_key_ignore' },
+      require('which-key').add {
+        { '<leader>c', group = '[C]ode' },
+        { '<leader>d', group = '[D]ocument' },
+        { '<leader>r', group = '[R]ename' },
+        { '<leader>s', group = '[S]earch' },
+        { '<leader>w', group = '[W]orkspace' },
+        { '<leader>t', group = '[T]oggle' },
+        { '<leader>n', group = '[N]ew' },
+        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       }
     end,
   },
@@ -338,6 +339,7 @@ require('lazy').setup({
         pyright = {},
         rust_analyzer = {},
         eslint = {},
+        tsserver = {},
 
         lua_ls = {
           settings = {
@@ -409,7 +411,7 @@ require('lazy').setup({
         -- Disable autoformat for files in a certain path
         local disable_filetypes = { c = true, cpp = true }
         return {
-          timeout_ms = 500,
+          timeout_ms = 1000,
           lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
         }
       end,
@@ -537,10 +539,17 @@ require('lazy').setup({
     end,
   },
 
-  { -- Improved typescript language server, disable tsserver in mason to use this
-    'pmizio/typescript-tools.nvim',
-    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
-    opts = {},
+  -- { -- Improved typescript language server, disable tsserver in mason to use this
+  --   'pmizio/typescript-tools.nvim',
+  --   dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
+  --   opts = {},
+  -- },
+
+  {
+    'goolord/alpha-nvim',
+    config = function()
+      require('alpha').setup(require('dashboard_theme').config)
+    end,
   },
 
   -- Highlight todo, notes, etc in comments
@@ -550,9 +559,9 @@ require('lazy').setup({
   { 'rhysd/conflict-marker.vim' },
 
   { -- Smooth Scroll
-    'declancm/cinnamon.nvim',
+    'karb94/neoscroll.nvim',
     config = function()
-      require('cinnamon').setup()
+      require('neoscroll').setup()
     end,
   },
 
