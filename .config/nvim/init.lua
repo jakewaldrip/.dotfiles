@@ -95,11 +95,14 @@ vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
   command = [[%s/\s\+$//e]],
 })
 
+-- Open Dashboard
+vim.keymap.set('n', '<leader>nd', ":lua require('alpha').start()<CR>", { desc = '[D]ashboard Open' })
+
 -- Open config
-vim.keymap.set('n', '<leader>nc', ':e ~/.config/nvim/init.lua<cr>', { desc = 'Open init.lua configuration' })
+vim.keymap.set('n', '<leader>nc', ':e ~/.config/nvim/init.lua<cr>', { desc = '[C]onfiguration open (init.lua)' })
 
 -- Format via eslint
-vim.keymap.set('n', '<leader>nf', ':EslintFixAll<CR>', { desc = 'Run Eslint for file' })
+vim.keymap.set('n', '<leader>nf', ':EslintFixAll<CR>', { desc = '[F]ormat File (Eslint)' })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
@@ -126,7 +129,7 @@ vim.keymap.set('n', '<c-p>', '<Plug>(YankyPreviousEntry)')
 vim.keymap.set('n', '<c-n>', '<Plug>(YankyNextEntry)')
 
 -- Toggle Zen Mode
-vim.keymap.set('n', '<leader>tz', ':ZenMode<CR>', { desc = 'Toggle Zen Mode' })
+vim.keymap.set('n', '<leader>tz', ':ZenMode<CR>', { desc = '[T]oggle [Z]en Mode' })
 
 -- System Clipboard interactions
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>y', '"+y', { noremap = true, silent = true, desc = 'Yank selection to system clipboard' })
@@ -134,7 +137,7 @@ vim.keymap.set({ 'n', 'v', 'x' }, '<leader>Y', '"+yy', { noremap = true, silent 
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>p', '"+p', { noremap = true, silent = true, desc = 'Paste to system clipboard' })
 
 -- Toggle Relative Line Numbers
-vim.keymap.set('n', '<leader>tr', ':set invrelativenumber<CR>', { desc = 'Toggle relative line numbers' })
+vim.keymap.set('n', '<leader>tr', ':set invrelativenumber<CR>', { desc = '[T]oggle [R]elative Line Numbers' })
 
 -- Enable closing help/popup windows with q instead of :q
 vim.api.nvim_create_autocmd({ 'FileType' }, {
@@ -459,6 +462,34 @@ require('lazy').setup({
             luasnip.lsp_expand(args.body)
           end,
         },
+        window = {
+          completion = {
+            border = {
+              { '󱐋', 'WarningMsg' },
+              { '─', 'Comment' },
+              { '╮', 'Comment' },
+              { '│', 'Comment' },
+              { '╯', 'Comment' },
+              { '─', 'Comment' },
+              { '╰', 'Comment' },
+              { '│', 'Comment' },
+            },
+            scrollbar = true,
+          },
+          documentation = {
+            border = {
+              { '', 'DiagnosticHint' },
+              { '─', 'Comment' },
+              { '╮', 'Comment' },
+              { '│', 'Comment' },
+              { '╯', 'Comment' },
+              { '─', 'Comment' },
+              { '╰', 'Comment' },
+              { '│', 'Comment' },
+            },
+            scrollbar = true,
+          },
+        },
         completion = { completeopt = 'menu,menuone,noinsert' },
 
         -- Read `:help ins-completion` for mapping related info here
@@ -534,6 +565,18 @@ require('lazy').setup({
         hide_fillchars = true,
         borderless_telescope = true,
         terminal_colors = true,
+        theme = {
+          variant = 'light',
+          overrides = function(colours)
+            return {
+              TelescopePromptPrefix = { fg = colours.blue },
+              TelescopeMatching = { fg = colours.cyan },
+              TelescopeResultsTitle = { fg = colours.blue },
+              TelescopePromptCounter = { fg = colours.cyan },
+              TelescopePromptTitle = { fg = colours.bg, bg = colours.blue, bold = true },
+            }
+          end,
+        },
       }
       vim.cmd 'colorscheme cyberdream'
     end,
