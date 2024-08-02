@@ -86,6 +86,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     local client = vim.lsp.get_client_by_id(args.data.client_id)
     client.server_capabilities.semanticTokensProvider = nil
+
+    vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
+    vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' })
+    vim.diagnostic.config {
+      float = {
+        border = 'rounded',
+      },
+    }
   end,
 })
 
@@ -414,7 +422,7 @@ require('lazy').setup({
         -- Disable autoformat for files in a certain path
         local disable_filetypes = { c = true, cpp = true }
         return {
-          timeout_ms = 1000,
+          timeout_ms = 2000,
           lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
         }
       end,
