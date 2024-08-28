@@ -104,13 +104,13 @@ vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
 })
 
 -- Open Dashboard
-vim.keymap.set('n', '<leader>nd', ":lua require('alpha').start()<CR>", { desc = '[D]ashboard Open' })
+vim.keymap.set('n', '<leader>nd', ":lua require('alpha').start()<CR>", { desc = '[D]ashboard Open', silent = true })
 
 -- Open config
-vim.keymap.set('n', '<leader>nc', ':e ~/.config/nvim/init.lua<cr>', { desc = '[C]onfiguration open (init.lua)' })
+vim.keymap.set('n', '<leader>nc', ':e ~/.config/nvim/init.lua<CR>', { desc = '[C]onfiguration open (init.lua)', silent = true })
 
 -- Format via eslint
-vim.keymap.set('n', '<leader>nf', ':EslintFixAll<CR>', { desc = '[F]ormat File (Eslint)' })
+vim.keymap.set('n', '<leader>nf', ':EslintFixAll<CR>', { desc = '[F]ormat File (Eslint)', silent = true })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
@@ -137,12 +137,19 @@ vim.keymap.set('n', '<c-p>', '<Plug>(YankyPreviousEntry)')
 vim.keymap.set('n', '<c-n>', '<Plug>(YankyNextEntry)')
 
 -- Toggle Zen Mode
-vim.keymap.set('n', '<leader>tz', ':ZenMode<CR>', { desc = '[T]oggle [Z]en Mode' })
+vim.keymap.set('n', '<leader>tz', ':ZenMode<CR>:<Esc>', { desc = '[T]oggle [Z]en Mode', silent = true })
+
+-- Toggle Vim Dadbod UI
+vim.keymap.set('n', '<leader>ts', ':DBUIToggle<CR>', { desc = '[T]oggle [S]ql UI', silent = true })
 
 -- System Clipboard interactions
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>y', '"+y', { noremap = true, silent = true, desc = 'Yank selection to system clipboard' })
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>Y', '"+yy', { noremap = true, silent = true, desc = 'Yank line to system clipboard' })
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>p', '"+p', { noremap = true, silent = true, desc = 'Paste to system clipboard' })
+
+-- Swap ; and :
+vim.keymap.set('n', ';', ':')
+vim.keymap.set('n', ':', ';')
 
 -- Toggle Relative Line Numbers
 vim.keymap.set('n', '<leader>tr', ':set invrelativenumber<CR>', { desc = '[T]oggle [R]elative Line Numbers' })
@@ -384,19 +391,6 @@ require('lazy').setup({
     end,
   },
 
-  { -- Enable copilot
-    'zbirenbaum/copilot.lua',
-    cmd = 'Copilot',
-    event = 'InsertEnter',
-    config = function()
-      require('copilot').setup {
-        suggestion = {
-          auto_trigger = true,
-        },
-      }
-    end,
-  },
-
   { -- Autoformat
     'stevearc/conform.nvim',
     lazy = false,
@@ -439,7 +433,6 @@ require('lazy').setup({
 
   { -- Autocompletion
     'hrsh7th/nvim-cmp',
-    event = 'InsertEnter',
     dependencies = {
       -- Snippet Engine & its associated nvim-cmp source
       {
@@ -458,6 +451,8 @@ require('lazy').setup({
       -- Adds other completion capabilities.
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
+      'hrsh7th/cmp-buffer',
+      'hrsh7th/cmp-cmdline',
     },
     config = function()
       local cmp = require 'cmp'
@@ -509,23 +504,6 @@ require('lazy').setup({
           -- More traditional autocomplete mappings
           ['<CR>'] = cmp.mapping.confirm { select = true },
 
-          -- Workaround for allowing <Tab> to accept copilot suggestions
-          ['<Tab>'] = cmp.mapping(function(fallback)
-            if require('copilot.suggestion').is_visible() then
-              require('copilot.suggestion').accept()
-            elseif cmp.visible() then
-              cmp.select_next_item { behavior = cmp.SelectBehavior.Insert }
-            elseif luasnip.expandable() then
-              luasnip.expand()
-            else
-              fallback()
-            end
-          end, {
-            'i',
-            's',
-          }),
-          ['<S-Tab>'] = cmp.mapping.select_prev_item(),
-
           -- Manually trigger a completion from nvim-cmp.
           ['<C-Space>'] = cmp.mapping.complete {},
 
@@ -549,6 +527,32 @@ require('lazy').setup({
           { name = 'path' },
         },
       }
+
+      -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+      cmp.setup.cmdline({ '/', '?' }, {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+          { name = 'buffer' },
+        },
+      })
+
+      -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+      cmp.setup.cmdline(':', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+          { name = 'path' },
+        }, {
+          { name = 'cmdline' },
+        }),
+        matching = { disallow_symbol_nonprefix_matching = false },
+      })
+
+      cmp.setup.filetype({ 'sql' }, {
+        sources = {
+          { name = 'vim-dadbod-completion' },
+          { name = 'buffer' },
+        },
+      })
     end,
   },
 
@@ -600,6 +604,24 @@ require('lazy').setup({
     'goolord/alpha-nvim',
     config = function()
       require('alpha').setup(require('dashboard_theme').config)
+    end,
+  },
+
+  -- Sql Interface
+  {
+    'kristijanhusak/vim-dadbod-ui',
+    dependencies = {
+      { 'tpope/vim-dadbod', lazy = true },
+      { 'kristijanhusak/vim-dadbod-completion', ft = { 'sql', 'mysql', 'plsql' }, lazy = true },
+    },
+    cmd = {
+      'DBUI',
+      'DBUIToggle',
+      'DBUIAddConnection',
+      'DBUIFindBuffer',
+    },
+    init = function()
+      vim.g.db_ui_use_nerd_fonts = 1
     end,
   },
 

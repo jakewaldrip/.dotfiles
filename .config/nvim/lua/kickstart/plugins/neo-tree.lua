@@ -11,8 +11,8 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '\\', ':Neotree reveal<CR>', { desc = 'NeoTree reveal' } },
-    { '|', ':Neotree toggle<CR>', { desc = 'NeoTree toggle' } },
+    { '\\', ':Neotree reveal<CR>', { desc = 'NeoTree reveal', silent = true } },
+    { '|', ':Neotree toggle<CR>', { desc = 'NeoTree toggle', silent = true } },
   },
   opts = {
     filesystem = {
