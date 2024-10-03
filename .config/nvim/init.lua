@@ -372,7 +372,7 @@ require('lazy').setup({
         pyright = {},
         rust_analyzer = {},
         eslint = {},
-        -- tsserver = {},
+        tsserver = {},
 
         lua_ls = {
           settings = {
@@ -597,12 +597,6 @@ require('lazy').setup({
       }
       vim.cmd 'colorscheme cyberdream'
     end,
-  },
-
-  { -- Improved typescript language server, disable tsserver in mason to use this
-    'pmizio/typescript-tools.nvim',
-    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
-    opts = {},
   },
 
   {
