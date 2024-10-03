@@ -7,6 +7,8 @@ local config = wezterm.config_builder()
 -- This is where you actually apply your config choices
 
 config.color_scheme = "Catppuccin Latte"
+-- Slightly more solarized theme, use depending on vibe
+-- config.color_scheme = "Lunaria Light (Gogh)"
 
 config.font = wezterm.font("0xProto Nerd Font Mono")
 config.font_size = 16
