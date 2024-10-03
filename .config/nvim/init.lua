@@ -69,6 +69,9 @@ vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
+-- Disable folding when opening file
+vim.wo.foldenable = false
+
 -- [[ Basic Keymaps ]]
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
@@ -80,6 +83,18 @@ vim.api.nvim_create_user_command('Cppath', function()
   vim.fn.setreg('+', path)
   vim.notify('Copied "' .. path .. '" to the clipboard!')
 end, {})
+
+-- Enable folding
+vim.api.nvim_create_autocmd({ 'FileType' }, {
+  callback = function()
+    if require('nvim-treesitter.parsers').has_parser() then
+      vim.opt.foldmethod = 'expr'
+      vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+    else
+      vim.opt.foldmethod = 'syntax'
+    end
+  end,
+})
 
 -- turns off LSP semantic tokens by default
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -357,7 +372,7 @@ require('lazy').setup({
         pyright = {},
         rust_analyzer = {},
         eslint = {},
-        tsserver = {},
+        -- tsserver = {},
 
         lua_ls = {
           settings = {
@@ -556,16 +571,6 @@ require('lazy').setup({
     end,
   },
 
-  -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-  -- {
-  --   'shaunsingh/nord.nvim',
-  --   priority = 1000,
-  --   init = function()
-  --     vim.cmd.colorscheme 'nord'
-  --     vim.cmd.hi 'Comment gui=none'
-  --   end,
-  -- },
-
   {
     'scottmckendry/cyberdream.nvim',
     lazy = false,
@@ -594,11 +599,11 @@ require('lazy').setup({
     end,
   },
 
-  -- { -- Improved typescript language server, disable tsserver in mason to use this
-  --   'pmizio/typescript-tools.nvim',
-  --   dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
-  --   opts = {},
-  -- },
+  { -- Improved typescript language server, disable tsserver in mason to use this
+    'pmizio/typescript-tools.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim', 'neovim/nvim-lspconfig' },
+    opts = {},
+  },
 
   {
     'goolord/alpha-nvim',
