@@ -139,7 +139,6 @@ if ! brew ls --versions powerlevel10k > /dev/null;
 then
   echo "p10k not found, installing via homebrew"
   brew install powerlevel10k
-  echo "source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme" >> ~/.zshrc
 else
   echo "p10k found ☑"
 fi
