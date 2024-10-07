@@ -113,7 +113,11 @@ else
 fi
 
 # Source nvm so it's available in this shell instance
-. $(brew --prefix nvm)/nvm.sh
+if [ -f $(brew --prefix nvm)/nvm.sh ]
+then
+  echo "Sourcing nvm into shell ☑"
+  . $(brew --prefix nvm)/nvm.sh
+fi
 
 # Nvm
 if ! command -v nvm &> /dev/null
@@ -165,10 +169,10 @@ fi
 # Neovim
 if ! command -v nvim &> /dev/null
 then
-  echo "\n\n====================\n\n"
+  echo "===================="
   echo "Neovim not found, please install from the following link"
   echo "https://github.com/neovim/neovim/blob/master/INSTALL.md"
-  echo "\n====================\n"
+  echo "===================="
 else
   echo "Neovim found ☑"
 fi
@@ -176,7 +180,6 @@ fi
 # Font download prompt
 echo "Download font of choice from https://www.nerdfonts.com/font-downloads"
 echo "(0xProto Nerd Font) is my current preference"
-echo "\n====================\n"
 
 echo ".dotfile installation script complete!"
-echo "\n====================\n"
+echo "===================="
