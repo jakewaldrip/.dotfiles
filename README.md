@@ -8,3 +8,4 @@
 * [ ] Separate install scripts per environment
   * [ ] Create install script for Ubuntu
   * [ ] Create install script for WSL2 (Windows in general)
+* [ ] Rename all dotfiles to dot-, and pass correct stow flag to handle it
