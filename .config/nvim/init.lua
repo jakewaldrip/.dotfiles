@@ -363,16 +363,17 @@ require('lazy').setup({
         end,
       })
 
+      -- Do I need this for blink-cmp? Possibly, but let's roll without it for now
       --  So, we create new LSP capabilities in neovim with nvim cmp, and then broadcast that to the servers.
       local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+      -- capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
       -- Enable the following language servers
       local servers = {
         pyright = {},
         rust_analyzer = {},
         eslint = {},
-        tsserver = {},
+        ts_ls = {},
 
         lua_ls = {
           settings = {
@@ -444,131 +445,6 @@ require('lazy').setup({
         javascriptreact = { 'prettier' },
       },
     },
-  },
-
-  { -- Autocompletion
-    'hrsh7th/nvim-cmp',
-    dependencies = {
-      -- Snippet Engine & its associated nvim-cmp source
-      {
-        'L3MON4D3/LuaSnip',
-        build = (function()
-          -- Remove the below condition to re-enable on windows. Not always supported
-          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
-            return
-          end
-          return 'make install_jsregexp'
-        end)(),
-        dependencies = {},
-      },
-      'saadparwaiz1/cmp_luasnip',
-
-      -- Adds other completion capabilities.
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-path',
-      'hrsh7th/cmp-buffer',
-      'hrsh7th/cmp-cmdline',
-    },
-    config = function()
-      local cmp = require 'cmp'
-      local luasnip = require 'luasnip'
-      luasnip.config.setup {}
-
-      cmp.setup {
-        snippet = {
-          expand = function(args)
-            luasnip.lsp_expand(args.body)
-          end,
-        },
-        window = {
-          completion = {
-            border = {
-              { '󱐋', 'WarningMsg' },
-              { '─', 'Comment' },
-              { '╮', 'Comment' },
-              { '│', 'Comment' },
-              { '╯', 'Comment' },
-              { '─', 'Comment' },
-              { '╰', 'Comment' },
-              { '│', 'Comment' },
-            },
-            scrollbar = true,
-          },
-          documentation = {
-            border = {
-              { '', 'DiagnosticHint' },
-              { '─', 'Comment' },
-              { '╮', 'Comment' },
-              { '│', 'Comment' },
-              { '╯', 'Comment' },
-              { '─', 'Comment' },
-              { '╰', 'Comment' },
-              { '│', 'Comment' },
-            },
-            scrollbar = true,
-          },
-        },
-        completion = { completeopt = 'menu,menuone,noinsert' },
-
-        -- Read `:help ins-completion` for mapping related info here
-        mapping = cmp.mapping.preset.insert {
-          -- Scroll the documentation window [b]ack / [f]orward
-          ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-f>'] = cmp.mapping.scroll_docs(4),
-
-          -- More traditional autocomplete mappings
-          ['<CR>'] = cmp.mapping.confirm { select = true },
-
-          -- Manually trigger a completion from nvim-cmp.
-          ['<C-Space>'] = cmp.mapping.complete {},
-
-          -- <c-l> will move you to the right of each of the expansion locations.
-          -- <c-h> is similar, except moving you backwards.
-          ['<C-l>'] = cmp.mapping(function()
-            if luasnip.expand_or_locally_jumpable() then
-              luasnip.expand_or_jump()
-            end
-          end, { 'i', 's' }),
-          ['<C-h>'] = cmp.mapping(function()
-            if luasnip.locally_jumpable(-1) then
-              luasnip.jump(-1)
-            end
-          end, { 'i', 's' }),
-        },
-        -- cmp sources, can add custom snippets, or something such as copilot here
-        sources = {
-          { name = 'nvim_lsp' },
-          { name = 'luasnip' },
-          { name = 'path' },
-        },
-      }
-
-      -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
-      cmp.setup.cmdline({ '/', '?' }, {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = {
-          { name = 'buffer' },
-        },
-      })
-
-      -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-      cmp.setup.cmdline(':', {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-          { name = 'path' },
-        }, {
-          { name = 'cmdline' },
-        }),
-        matching = { disallow_symbol_nonprefix_matching = false },
-      })
-
-      cmp.setup.filetype({ 'sql' }, {
-        sources = {
-          { name = 'vim-dadbod-completion' },
-          { name = 'buffer' },
-        },
-      })
-    end,
   },
 
   {
