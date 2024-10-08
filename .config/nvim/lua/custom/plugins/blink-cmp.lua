@@ -4,27 +4,73 @@
 return {
   'saghen/blink.cmp',
   lazy = false, -- lazy loading handled internally
-  -- optional: provides snippets for the snippet source
-  -- dependencies = 'rafamadriz/friendly-snippets',
-
-  -- use a release tag to download pre-built binaries
-  version = 'v0.*',
-  -- OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
-  -- build = 'cargo build --release',
-
+  version = 'v0.*', -- use a release tag to download pre-built binaries
   opts = {
-    highlight = {
-      -- sets the fallback highlight groups to nvim-cmp's highlight groups
-      -- useful for when your theme doesn't support blink.cmp
-      -- will be removed in a future release, assuming themes add support
-      use_nvim_cmp_as_default = true,
-    },
-    -- set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-    -- adjusts spacing to ensure icons are aligned
+    highlight = { use_nvim_cmp_as_default = true },
     nerd_font_variant = 'normal',
-    -- experimental auto-brackets support
-    -- accept = { auto_brackets = { enabled = true } }
-    -- experimental signature help support
-    -- trigger = { signature_help = { enabled = true } }
+
+    -- accept = { auto_brackets = { enabled = true } },
+    -- trigger = { signature_help = { enabled = true } },
+
+    keymap = {
+      show = '<C-Space>',
+      accept = '<CR>',
+      scroll_documentation_down = {},
+      scroll_documentation_up = {},
+      snippet_forward = {},
+      snippet_backward = {},
+    },
+
+    windows = {
+      autocomplete = {
+        min_width = 20,
+        max_width = 40,
+        max_height = 15,
+        border = 'rounded',
+        draw = 'reversed',
+        scrolloff = 2,
+        direction_priority = { 's', 'n' },
+      },
+      documentation = {
+        min_width = 15,
+        max_width = 50,
+        max_height = 20,
+        border = 'rounded',
+        direction_priority = {
+          autocomplete_north = { 'e', 'w', 'n', 's' },
+          autocomplete_south = { 'e', 'w', 's', 'n' },
+        },
+        auto_show = true,
+        auto_show_delay_ms = 500,
+        update_delay_ms = 100,
+      },
+    },
+    kind_icons = {
+      Text = '',
+      Method = '󰆧',
+      Function = '󰊕',
+      Constructor = '',
+      Field = '󰇽',
+      Variable = '󰂡',
+      Class = '󰠱',
+      Interface = '',
+      Module = '',
+      Property = '󰜢',
+      Unit = '',
+      Value = '󰎠',
+      Enum = '',
+      Keyword = '󰌋',
+      Snippet = '󰅱',
+      Color = '󰏘',
+      File = '󰈙',
+      Reference = '',
+      Folder = '󰉋',
+      EnumMember = '',
+      Constant = '󰏿',
+      Struct = '',
+      Event = '',
+      Operator = '󰆕',
+      TypeParameter = '󰅲',
+    },
   },
 }
