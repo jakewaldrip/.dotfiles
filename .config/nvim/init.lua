@@ -125,7 +125,7 @@ vim.keymap.set('n', '<leader>nc', ':e ~/.config/nvim/init.lua<CR>', { desc = '[C
 vim.keymap.set('n', '<leader>nf', ':EslintFixAll<CR>', { desc = '[F]ormat File (Eslint)', silent = true })
 
 -- Make it rain animation
-vim.keymap.set('n', '<leader>ta', '<cmd>CellularAutomaton make_it_rain<CR>')
+vim.keymap.set('n', '<leader>ta', '<cmd>CellularAutomaton make_it_rain<CR>', { desc = '[T]oggle [A]nimation', silent = true })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
