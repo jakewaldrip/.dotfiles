@@ -15,6 +15,7 @@ return {
     keymap = {
       show = '<C-Space>',
       accept = '<CR>',
+      hide = '<C-e>',
       scroll_documentation_down = {},
       scroll_documentation_up = {},
       snippet_forward = {},
