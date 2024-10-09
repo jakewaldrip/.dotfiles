@@ -124,6 +124,9 @@ vim.keymap.set('n', '<leader>nc', ':e ~/.config/nvim/init.lua<CR>', { desc = '[C
 -- Format via eslint
 vim.keymap.set('n', '<leader>nf', ':EslintFixAll<CR>', { desc = '[F]ormat File (Eslint)', silent = true })
 
+-- Make it rain animation
+vim.keymap.set('n', '<leader>ta', '<cmd>CellularAutomaton make_it_rain<CR>')
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
@@ -403,6 +406,8 @@ require('lazy').setup({
       }
     end,
   },
+
+  { 'eandrju/cellular-automaton.nvim', setup = {} },
 
   { -- Autoformat
     'stevearc/conform.nvim',
