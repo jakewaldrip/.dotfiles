@@ -293,8 +293,11 @@ require('lazy').setup({
 
       -- Lua/Neovim LSP plugin
       { 'folke/neodev.nvim', opts = {} },
+
+      -- Blink
+      { 'saghen/blink.cmp', opts = {} },
     },
-    config = function()
+    config = function(_, opts)
       -- Map telescope bindings when LSP attaches
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
@@ -363,11 +366,6 @@ require('lazy').setup({
         end,
       })
 
-      -- Do I need this for blink-cmp? Possibly, but let's roll without it for now
-      --  So, we create new LSP capabilities in neovim with nvim cmp, and then broadcast that to the servers.
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      -- capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
-
       -- Enable the following language servers
       local servers = {
         pyright = {},
@@ -398,8 +396,7 @@ require('lazy').setup({
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed by the server configuration above.
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+            server.capabilities = require('blink.cmp').get_lsp_capabilities(server.capabilities)
             require('lspconfig')[server_name].setup(server)
           end,
         },
