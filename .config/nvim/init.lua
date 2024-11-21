@@ -127,9 +127,6 @@ vim.keymap.set('n', '<leader>nc', ':e ~/.config/nvim/init.lua<CR>', { desc = '[C
 -- Format via eslint
 vim.keymap.set('n', '<leader>nf', ':EslintFixAll<CR>', { desc = '[F]ormat File (Eslint)', silent = true })
 
--- Make it rain animation
-vim.keymap.set('n', '<leader>ta', '<cmd>CellularAutomaton make_it_rain<CR>', { desc = '[T]oggle [A]nimation', silent = true })
-
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
@@ -153,12 +150,6 @@ vim.keymap.set({ 'n', 'x' }, 'gP', '<Plug>(YankyGPutBefore)')
 
 vim.keymap.set('n', '<c-p>', '<Plug>(YankyPreviousEntry)')
 vim.keymap.set('n', '<c-n>', '<Plug>(YankyNextEntry)')
-
--- Toggle Zen Mode
-vim.keymap.set('n', '<leader>tz', ':ZenMode<CR>:<Esc>', { desc = '[T]oggle [Z]en Mode', silent = true })
-
--- Toggle Vim Dadbod UI
-vim.keymap.set('n', '<leader>ts', ':DBUIToggle<CR>', { desc = '[T]oggle [S]ql UI', silent = true })
 
 -- System Clipboard interactions
 vim.keymap.set({ 'n', 'v', 'x' }, '<leader>y', '"+y', { noremap = true, silent = true, desc = 'Yank selection to system clipboard' })
@@ -415,8 +406,6 @@ require('lazy').setup({
     end,
   },
 
-  { 'eandrju/cellular-automaton.nvim', setup = {} },
-
   { -- Autoformat
     'stevearc/conform.nvim',
     lazy = false,
@@ -466,7 +455,7 @@ require('lazy').setup({
         transparent = true,
         italic_comments = true,
         hide_fillchars = true,
-        borderless_telescope = true,
+        borderless_telescope = false,
         terminal_colors = true,
         theme = {
           variant = 'light',
@@ -492,24 +481,6 @@ require('lazy').setup({
     end,
   },
 
-  -- Sql Interface
-  {
-    'kristijanhusak/vim-dadbod-ui',
-    dependencies = {
-      { 'tpope/vim-dadbod', lazy = true },
-      { 'kristijanhusak/vim-dadbod-completion', ft = { 'sql', 'mysql', 'plsql' }, lazy = true },
-    },
-    cmd = {
-      'DBUI',
-      'DBUIToggle',
-      'DBUIAddConnection',
-      'DBUIFindBuffer',
-    },
-    init = function()
-      vim.g.db_ui_use_nerd_fonts = 1
-    end,
-  },
-
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -531,15 +502,6 @@ require('lazy').setup({
   { -- Improved yanking behavior
     'gbprod/yanky.nvim',
     opts = {},
-  },
-
-  { -- Zen Mode
-    'folke/zen-mode.nvim',
-    opts = {
-      window = {
-        width = 0.80,
-      },
-    },
   },
 
   { -- Collection of various small independent plugins/modules
