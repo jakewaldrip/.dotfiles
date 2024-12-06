@@ -458,7 +458,7 @@ require('lazy').setup({
         borderless_telescope = false,
         terminal_colors = true,
         theme = {
-          variant = 'light',
+          variant = 'dark',
           overrides = function(colours)
             return {
               TelescopePromptPrefix = { fg = colours.blue },

@@ -1,14 +1,19 @@
--- Pull in the wezterm API
 local wezterm = require("wezterm")
-
--- This will hold the configuration.
 local config = wezterm.config_builder()
 
--- This is where you actually apply your config choices
+config.color_scheme = "Gruvbox Dark (Gogh)"
 
-config.color_scheme = "Catppuccin Latte"
+-- Blue Tone Dark Theme
+-- config.color_scheme = "Catppuccin Mocha"
+
+-- Light Theme
+-- config.color_scheme = "Catppuccin Latte"
+
 -- Slightly more solarized theme, use depending on vibe
 -- config.color_scheme = "Lunaria Light (Gogh)"
+
+-- Nord Theme
+-- config.color_scheme = "nord"
 
 config.font = wezterm.font("0xProto Nerd Font Mono")
 config.font_size = 16
@@ -17,7 +22,7 @@ config.enable_tab_bar = false
 
 config.window_decorations = "RESIZE"
 
-config.window_background_opacity = 0.8
+config.window_background_opacity = 0.92
 config.macos_window_background_blur = 10
 
 -- Key bindings
