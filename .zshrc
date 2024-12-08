@@ -5,6 +5,15 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# Set path for mac vs linux
+if [[ "$(uname)" == "Darwin" ]]; then
+  export package_path="$(brew --prefix)"
+  export powerlevel_path="$(brew --prefix)/share"
+else
+  package_path="/usr/"
+  powerlevel_path="$HOME"
+fi
+
 # Vars
 export ZDIR=$HOME/zsh
 
@@ -18,7 +27,7 @@ for f in $ZDIR/plugins/*; do
 done
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-source $(brew --prefix)/share/powerlevel10k/powerlevel10k.zsh-theme
+source $powerlevel_path/powerlevel10k/powerlevel10k.zsh-theme
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Better history setup
@@ -33,5 +42,5 @@ setopt hist_verify
 # completion using arrow keys (based on history)
 bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $package_path/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $package_path/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

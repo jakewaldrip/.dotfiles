@@ -18,7 +18,7 @@ config.color_scheme = "Gruvbox Dark (Gogh)"
 config.font = wezterm.font("0xProto Nerd Font Mono")
 config.font_size = 16
 
-config.enable_tab_bar = false
+config.enable_tab_bar = true 
 
 config.window_decorations = "RESIZE"
 
