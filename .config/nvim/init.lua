@@ -260,8 +260,29 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>sc', builtin.git_status, { desc = '[S]earch [C]hanges' })
+
+      local no_preview = function()
+        return require('telescope.themes').get_dropdown {
+          borderchars = {
+            { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
+            prompt = { '─', '│', ' ', '│', '┌', '┐', '│', '│' },
+            results = { '─', '│', '─', '│', '├', '┤', '┘', '└' },
+            preview = { '─', '│', '─', '│', '┌', '┐', '┘', '└' },
+          },
+          width = 0.8,
+          previewer = false,
+          prompt_title = false,
+        }
+      end
+
+      vim.keymap.set('n', '<leader>s.', function()
+        builtin.oldfiles { layout_strategy = 'vertical', layout_config = { width = 0.5, height = 0.9 } }
+      end, { desc = '[S]earch Recent Files ("." for repeat)' })
+
+      vim.keymap.set('n', '<leader><leader>', function()
+        builtin.buffers(no_preview())
+      end, { desc = '[ ] Find Existing Buffers' })
 
       vim.keymap.set('n', '<leader>/', function()
         builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
@@ -422,7 +443,7 @@ require('lazy').setup({
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't have a well standardize coding styl
+        -- Disable "format_on_save lsp_fallback" for languages that don't have a well standardize coding style
         local bufname = vim.api.nvim_buf_get_name(bufnr)
         if bufname:match '/node_modules/' then
           return
@@ -480,9 +501,6 @@ require('lazy').setup({
       require('alpha').setup(require('dashboard_theme').config)
     end,
   },
-
-  -- Highlight todo, notes, etc in comments
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
   -- Visualize Git Conflicts and add keymaps
   { 'rhysd/conflict-marker.vim' },
