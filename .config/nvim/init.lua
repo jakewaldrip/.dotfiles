@@ -204,6 +204,8 @@ require('lazy').setup({
     opts = {},
   },
 
+  { 'AndreM222/copilot-lualine' },
+
   -- Included plugins
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.lint',
