@@ -83,8 +83,18 @@ return {
     local servers = {
       pyright = {},
       rust_analyzer = {},
-      eslint = {},
-      ts_ls = {},
+      eslint_d = {},
+      ts_ls = {
+        settings = {
+          init_options = {
+            hostInfo = 'neovim',
+            maxTsServerMemory = 12288,
+            preferences = {
+              includePackageJsonAutoImports = 'off',
+            },
+          },
+        },
+      },
 
       lua_ls = {
         settings = {
