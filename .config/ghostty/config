@@ -1,0 +1,8 @@
+theme = GruvboxDark
+font-family = 0xProto Nerd Font Mono
+font-size = 16
+
+background-opacity = 0.90
+background-blur-radius = 12
+
+macos-titlebar-style = tabs
