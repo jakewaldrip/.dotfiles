@@ -5,6 +5,12 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+vim.keymap.set('n', '<leader>tvt', ":lua require('vimscape').toggle()", { desc = 'Vimscape toggle' })
+vim.keymap.set('n', '<leader>tvs', ":lua require('vimscape').show_data()", { desc = 'Vimscape show data' })
+
+vim.keymap.set('n', '<leader>tq', ":lua require('neorain').play()", { desc = 'Neorain on' })
+vim.keymap.set('n', '<leader>tw', ":lua require('neorain').stop()", { desc = 'Neorain off' })
+
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = true
 
@@ -204,7 +210,16 @@ require('lazy').setup({
     opts = {},
   },
 
-  { 'AndreM222/copilot-lualine' },
+  -- -- Temp vimscape testing
+  {
+    dir = '/Users/jacob.waldrip/development/vimscape2007.nvim',
+  },
+
+  -- Temp neorain testing
+  {
+    dir = '/Users/jacob.waldrip/development/neorain.nvim',
+    opts = {},
+  },
 
   -- Included plugins
   -- require 'kickstart.plugins.debug',

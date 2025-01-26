@@ -11,6 +11,11 @@ return {
     require('mini.surround').setup()
 
     -- Prettify Notifications
-    require('mini.notify').setup()
+    local notify = require 'mini.notify'
+    vim.notify = notify.make_notify {
+      ERROR = { duration = 5000 },
+      WARN = { duration = 5000 },
+      INFO = { duration = 5000 },
+    }
   end,
 }
