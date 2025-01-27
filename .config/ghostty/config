@@ -2,6 +2,9 @@ theme = GruvboxDark
 font-family = 0xProto Nerd Font Mono
 font-size = 16
 
+cursor-style = block
+cursor-style-blink = false
+
 background-opacity = 0.90
 background-blur-radius = 12
 
