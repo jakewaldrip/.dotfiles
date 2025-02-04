@@ -4,13 +4,13 @@
 return {
   'echasnovski/mini.nvim',
   config = function()
-    -- Better Around/Inside textobjects
-    require('mini.ai').setup { n_lines = 500 }
-
-    -- Add/delete/replace surroundings (brackets, quotes, etc.)
-    require('mini.surround').setup()
-
     -- Prettify Notifications
-    require('mini.notify').setup()
+    local mini_notify = require 'mini.notify'
+    mini_notify.setup()
+    vim.notify = mini_notify.make_notify {
+      ERROR = { duration = 5000 },
+      WARN = { duration = 4000 },
+      INFO = { duration = 3000 },
+    }
   end,
 }
