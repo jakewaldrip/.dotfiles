@@ -9,20 +9,18 @@ return {
       transparent = true,
       italic_comments = true,
       hide_fillchars = true,
-      borderless_telescope = false,
+      borderless_pickers = false,
       terminal_colors = true,
-      theme = {
-        variant = 'dark',
-        overrides = function(colours)
-          return {
-            TelescopePromptPrefix = { fg = colours.blue },
-            TelescopeMatching = { fg = colours.cyan },
-            TelescopeResultsTitle = { fg = colours.blue },
-            TelescopePromptCounter = { fg = colours.cyan },
-            TelescopePromptTitle = { fg = colours.bg, bg = colours.blue, bold = true },
-          }
-        end,
-      },
+      variant = 'default',
+      overrides = function(colours)
+        return {
+          TelescopePromptPrefix = { fg = colours.blue },
+          TelescopeMatching = { fg = colours.cyan },
+          TelescopeResultsTitle = { fg = colours.blue },
+          TelescopePromptCounter = { fg = colours.cyan },
+          TelescopePromptTitle = { fg = colours.bg, bg = colours.blue, bold = true },
+        }
+      end,
     }
     vim.cmd 'colorscheme cyberdream'
   end,
