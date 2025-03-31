@@ -93,6 +93,9 @@ vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
   command = [[%s/\s\+$//e]],
 })
 
+-- Rename word under cursor using substitute command
+vim.keymap.set('n', '<leader>rw', ':%s/<C-r><C-w>/', { desc = '[R]ename [W]ord' })
+
 -- Open config
 vim.keymap.set('n', '<leader>nc', ':e ~/.config/nvim/init.lua<CR>', { desc = '[C]onfiguration open (init.lua)', silent = true })
 
