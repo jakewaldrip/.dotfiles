@@ -1,4 +1,3 @@
--- test value
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -75,37 +74,18 @@ vim.wo.foldenable = false
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
+-- Virtual diagnostic text
+vim.diagnostic.config { virtual_lines = true }
+
+-- Rounded boarders
+vim.o.winborder = 'double'
+
 -- Custom Commands
 vim.api.nvim_create_user_command('Cppath', function()
   local path = vim.fn.expand '%:p'
   vim.fn.setreg('+', path)
   vim.notify('Copied "' .. path .. '" to the clipboard!')
 end, {})
-
--- Enable folding
-vim.api.nvim_create_autocmd({ 'FileType' }, {
-  callback = function()
-    if require('nvim-treesitter.parsers').has_parser() then
-      vim.opt.foldmethod = 'expr'
-      vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
-    else
-      vim.opt.foldmethod = 'syntax'
-    end
-  end,
-})
-
--- Gives rounded border to LSP pop ups
-vim.api.nvim_create_autocmd('LspAttach', {
-  callback = function()
-    vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'double' })
-    vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'double' })
-    vim.diagnostic.config {
-      float = {
-        border = 'double',
-      },
-    }
-  end,
-})
 
 -- Remove trailing spaces
 vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
@@ -120,8 +100,14 @@ vim.keymap.set('n', '<leader>nc', ':e ~/.config/nvim/init.lua<CR>', { desc = '[C
 vim.keymap.set('n', '<leader>nf', ':EslintFixAll<CR>', { desc = '[F]ormat File (Eslint)', silent = true })
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
+vim.keymap.set('n', '[d', function()
+  vim.diagnostic.jump { count = 1, float = true }
+end, { desc = 'Go to previous [D]iagnostic message' })
+
+vim.keymap.set('n', '[d', function()
+  vim.diagnostic.jump { count = -1, float = true }
+end, { desc = 'Go to next [D]iagnostic message' })
+
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
