@@ -7,6 +7,9 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = true
 
+-- Replace status line with command line when active
+vim.o.cmdheight = 0
+
 -- Disable netrw by default (fooling vim into thinking it's already loaded)
 vim.g.loaded_netrwPlugin = 1
 vim.g.loaded_netrw = 1
