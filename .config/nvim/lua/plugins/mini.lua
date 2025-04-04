@@ -12,5 +12,8 @@ return {
       WARN = { duration = 4000 },
       INFO = { duration = 3000 },
     }
+
+    -- Autopairs
+    require('mini.pairs').setup()
   end,
 }

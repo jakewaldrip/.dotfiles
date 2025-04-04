@@ -9,7 +9,7 @@ return {
 
     -- Disable for markdown
     enabled = function()
-      return not vim.tbl_contains({ 'markdown' }, vim.bo.filetype) and vim.bo.buftype ~= 'prompt' and vim.b.completion ~= false
+      return not vim.tbl_contains({ 'markdown', 'copilot-chat' }, vim.bo.filetype) and vim.bo.buftype ~= 'prompt' and vim.b.completion ~= false
     end,
 
     appearance = {
