@@ -1,1 +1,0 @@
-lua/lsp-config.lua
