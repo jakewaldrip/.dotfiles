@@ -170,6 +170,9 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- Macro Shortcuts
+vim.keymap.set('n', '<leader>ml', 'viwyoconsole.log();<Esc>hhp', { desc = '[L]og Varaible' })
+
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 ---@diagnostic disable-next-line: undefined-field
 if not vim.loop.fs_stat(lazypath) then

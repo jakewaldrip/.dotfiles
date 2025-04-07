@@ -12,6 +12,7 @@ return {
       { '<leader>c', group = '[C]ode' },
       { '<leader>d', group = '[D]ocument' },
       { '<leader>e', group = '[E]rrors' },
+      { '<leader>m', group = '[M]acros' },
       { '<leader>r', group = '[R]ename' },
       { '<leader>s', group = '[S]earch' },
       { '<leader>w', group = '[W]orkspace' },

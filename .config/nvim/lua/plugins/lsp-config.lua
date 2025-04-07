@@ -75,6 +75,8 @@ return {
       group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
       callback = function(event)
         vim.lsp.buf.clear_references()
+
+        vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
         vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event.buf }
       end,
     })
@@ -83,12 +85,12 @@ return {
     local servers = {
       pyright = {},
       rust_analyzer = {},
-      eslint_d = {},
+      -- eslint_d = {},
       ts_ls = {
         settings = {
           init_options = {
             hostInfo = 'neovim',
-            maxTsServerMemory = 12288,
+            maxTsServerMemory = 16512,
             preferences = {
               includePackageJsonAutoImports = 'off',
             },
