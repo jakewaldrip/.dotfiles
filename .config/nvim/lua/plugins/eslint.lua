@@ -8,7 +8,7 @@ local path = '/Users/jacob.waldrip/.local/share/nvim/lazy/nvim-eslint'
 return {
   'esmuellert/nvim-eslint',
   opts = {
-    cmd = { 'node', path .. '/vscode-eslint/server/out/eslintServer.js', '--stdio', '--max-old-space-size=8182' },
+    cmd = { 'node', path .. '/vscode-eslint/server/out/eslintServer.js', '--max-old-space-size=8196', '--stdio' },
     settings = {
       run = 'onSave',
     },
