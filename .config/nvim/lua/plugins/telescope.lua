@@ -111,6 +111,19 @@ return {
     vim.keymap.set('n', '<leader>sc', builtin.git_status, { desc = '[S]earch [C]hanges' })
     vim.keymap.set('n', '<leader>sg', live_multigrep)
 
+    vim.keymap.set(
+      'v',
+      '<leader>s,',
+      "\"zy<cmd>exec 'Telescope grep_string default_text=' . escape(@z, ' ')<cr>",
+      { desc = 'Find by Grep (Visual)', silent = true }
+    )
+    vim.keymap.set(
+      'v',
+      '<leader>s.',
+      "\"zy<cmd>exec 'Telescope find_files default_text=' . escape(@z, ' ')<cr>",
+      { desc = 'Find Files (Visual)', silent = true }
+    )
+
     vim.keymap.set('n', '<leader>s.', function()
       builtin.oldfiles { layout_strategy = 'vertical', layout_config = { width = 0.5, height = 0.9 } }
     end, { desc = '[S]earch Recent Files ("." for repeat)' })
