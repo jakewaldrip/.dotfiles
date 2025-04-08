@@ -3,7 +3,7 @@
 return {
   'neovim/nvim-lspconfig',
   dependencies = {
-    { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
+    { 'williamboman/mason.nvim', opts = {} }, -- NOTE: Must be loaded before dependants
     'williamboman/mason-lspconfig.nvim',
     'WhoIsSethDaniel/mason-tool-installer.nvim',
 
@@ -25,10 +25,7 @@ return {
         map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
         -- Find references for the word under your cursor.
-        map('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-
-        -- Jump to the implementation of the word under your cursor.
-        map('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+        map('grf', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
 
         -- Jump to the type of the word under your cursor.
         map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
@@ -39,45 +36,56 @@ return {
         -- Fuzzy find all the symbols in your current workspace.
         map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
-        -- Rename the variable under your cursor.
-        map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-
-        -- Execute a code action, usually your cursor needs to be on top of an error or suggestion
-        map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-
-        -- Opens a popup that displays documentation about the word under your cursor
-        --  See `:help K` for why this keymap.
-        map('K', vim.lsp.buf.hover, 'Hover Documentation')
-
         -- Jump to the Declaration of the word under your cursor (ie, C header file)
         map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
         -- Highlight references of word under cursor on cursor hold
         local client = vim.lsp.get_client_by_id(event.data.client_id)
-        if client and client.server_capabilities.documentHighlightProvider then
+
+        -- Add toggle for inlay hints if lsp supports
+        if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+          map('<leader>th', function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
+          end, '[T]oggle Inlay [H]ints')
+        end
+
+        if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
           local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+
+          -- Highlight word under cursor
           vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
             buffer = event.buf,
             group = highlight_augroup,
             callback = vim.lsp.buf.document_highlight,
           })
 
+          -- Clear highlighted word under cursor
           vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
             buffer = event.buf,
             group = highlight_augroup,
             callback = vim.lsp.buf.clear_references,
           })
+
+          -- Clear highlights on lsp detatch
+          vim.api.nvim_create_autocmd('LspDetach', {
+            group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+            callback = function(other_event)
+              vim.lsp.buf.clear_references()
+
+              vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+              vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = other_event.buf }
+            end,
+          })
         end
-      end,
-    })
 
-    vim.api.nvim_create_autocmd('LspDetach', {
-      group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
-      callback = function(event)
-        vim.lsp.buf.clear_references()
-
-        vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
-        vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event.buf }
+        -- Change diagnostic symbols in the sign column (gutter)
+        if vim.g.have_nerd_font then
+          local signs = { Error = '', Warn = '', Hint = '', Info = '' }
+          for type, icon in pairs(signs) do
+            local hl = 'DiagnosticSign' .. type
+            vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+          end
+        end
       end,
     })
 
@@ -87,13 +95,21 @@ return {
       rust_analyzer = {},
       -- eslint_d = {},
       ts_ls = {
+        init_options = {
+          hostInfo = 'neovim',
+          maxTsServerMemory = 8192,
+          preferences = {
+            includePackageJsonAutoImports = 'off',
+            includeInlayVariableTypeHints = true,
+            includeInlayPropertyDeclarationTypeHints = true,
+            includeInlayFunctionLikeReturnTypeHints = true,
+            includeInlayEnumMemberValueHints = true,
+            importModuleSpecifierPreference = 'non-relative',
+          },
+        },
         settings = {
-          init_options = {
-            hostInfo = 'neovim',
-            maxTsServerMemory = 16512,
-            preferences = {
-              includePackageJsonAutoImports = 'off',
-            },
+          inlay_hints = {
+            enabled = true,
           },
         },
       },
@@ -110,7 +126,6 @@ return {
     }
 
     -- Setup language server via mason (LSP manager)
-    require('mason').setup()
     local ensure_installed = vim.tbl_keys(servers or {})
     vim.list_extend(ensure_installed, {
       'stylua', -- Used to format Lua code
