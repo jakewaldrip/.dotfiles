@@ -158,7 +158,7 @@ else
 fi
 
 # Zsh-Syntax-Highlighting
-if ! brew ls --versions zsh-autosuggestions > /dev/null;
+if ! brew ls --versions zsh-syntax-highlighting > /dev/null;
 then
   echo "Installing zsh-syntax-highlighting"
   brew install zsh-autosuggestions
