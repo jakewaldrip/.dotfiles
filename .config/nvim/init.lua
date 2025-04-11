@@ -96,7 +96,7 @@ vim.diagnostic.config {
 }
 
 -- Rounded boarders
-vim.o.winborder = 'double'
+vim.o.winborder = 'none'
 
 -- Custom Commands
 vim.api.nvim_create_user_command('Cppath', function()

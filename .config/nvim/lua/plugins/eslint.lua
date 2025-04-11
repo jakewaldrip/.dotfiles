@@ -10,6 +10,9 @@ return {
   opts = {
     cmd = { 'node', '--max-old-space-size=8196', path .. '/vscode-eslint/server/out/eslintServer.js', '--stdio' },
     settings = {
+      codeActionOnSave = {
+        mode = 'all',
+      },
       run = 'onSave',
     },
   },
