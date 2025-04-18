@@ -20,7 +20,6 @@ return {
       { '<leader>w', group = '[W]orkspace' },
       { '<leader>t', group = '[T]oggle' },
       { '<leader>n', group = '[N]ew' },
-      { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       { '<leader>a', group = '[A]i' },
     },
   },

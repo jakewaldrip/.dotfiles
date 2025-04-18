@@ -39,9 +39,7 @@ return {
           end
         end, { desc = 'Jump to previous git [c]hange' })
 
-        map('n', '<leader>hb', gitsigns.blame_line, { desc = 'Git [b]lame line' })
-        -- Toggles
-        map('n', '<leader>tb', gitsigns.toggle_current_line_blame, { desc = '[T]oggle git show [b]lame line' })
+        map('n', '<leader>eb', gitsigns.blame_line, { desc = 'Git [b]lame line' })
       end,
     },
   },
