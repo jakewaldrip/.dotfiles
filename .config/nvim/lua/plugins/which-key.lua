@@ -11,16 +11,24 @@ return {
       keys = {},
     },
     spec = {
+      -- Top Level
       { '<leader>c', group = '[C]ode' },
-      { '<leader>d', group = '[D]ocument' },
+      { '<leader>u', group = '[U]niform' },
       { '<leader>e', group = '[E]rrors' },
+      { '<leader>g', group = '[G]it' },
+      { '<leader>b', group = '[B]uffer' },
+      { '<leader><leader>', hidden = true },
       { '<leader>m', group = '[M]acros' },
       { '<leader>r', group = '[R]ename' },
       { '<leader>s', group = '[S]earch' },
-      { '<leader>w', group = '[W]orkspace' },
       { '<leader>t', group = '[T]oggle' },
-      { '<leader>n', group = '[N]ew' },
       { '<leader>a', group = '[A]i' },
+
+      -- Overrides
+      { 'gra', desc = 'Code [A]ctions' },
+      { 'gri', desc = '[I]mplementation' },
+      { 'grr', desc = '[R]eferences (Quickfix)' },
+      { 'grn', desc = '[R]ename (Quickfix)' },
     },
   },
 }

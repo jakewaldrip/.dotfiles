@@ -7,13 +7,6 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = true
 
--- Replace status line with command line when active
-vim.o.cmdheight = 0
-
--- Disable netrw by default (fooling vim into thinking it's already loaded)
-vim.g.loaded_netrwPlugin = 1
-vim.g.loaded_netrw = 1
-
 -- Make line numbers default
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -114,12 +107,6 @@ vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
 -- Rename word under cursor using substitute command
 vim.keymap.set('n', '<leader>rw', ':%s/<C-r><C-w>/', { desc = '[R]ename [W]ord' })
 
--- Open config
-vim.keymap.set('n', '<leader>nc', ':e ~/.config/nvim/init.lua<CR>', { desc = '[C]onfiguration open (init.lua)', silent = true })
-
--- Format via eslint
-vim.keymap.set('n', '<leader>nf', ':EslintFixAll<CR>', { desc = '[F]ormat File (Eslint)', silent = true })
-
 vim.keymap.set('n', '<leader>ee', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>eq', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
@@ -143,6 +130,10 @@ vim.keymap.set('n', ':', ';')
 
 -- Toggle Relative Line Numbers
 vim.keymap.set('n', '<leader>tr', ':set invrelativenumber<CR>', { desc = '[T]oggle [R]elative Line Numbers' })
+
+-- Copy whole file
+vim.keymap.set('n', '<leader>by', 'ggvG$y', { desc = '[B]uffer [y]ank' })
+vim.keymap.set('n', '<leader>bY', 'ggvG$"+y', { desc = '[B]uffer [Y]ank' })
 
 -- Enable closing help/popup windows with q instead of :q
 vim.api.nvim_create_autocmd({ 'FileType' }, {

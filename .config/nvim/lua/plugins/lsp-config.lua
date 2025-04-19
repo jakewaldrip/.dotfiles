@@ -11,33 +11,12 @@ return {
     { 'saghen/blink.cmp', opts = {} },
   },
   config = function(_, opts)
-    -- Map telescope bindings when LSP attaches
     vim.api.nvim_create_autocmd('LspAttach', {
       group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
       callback = function(event)
         local map = function(keys, func, desc)
           vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
         end
-
-        -- Jump to the definition of the word under your cursor.
-        --  This is where a variable was first declared, or where a function is defined, etc.
-        --  To jump back, press <C-t>.
-        map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-
-        -- Find references for the word under your cursor.
-        map('grf', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-
-        -- Jump to the type of the word under your cursor.
-        map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
-
-        -- Fuzzy find all the symbols in your current document.
-        map('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-
-        -- Fuzzy find all the symbols in your current workspace.
-        map('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
-
-        -- Jump to the Declaration of the word under your cursor (ie, C header file)
-        map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
         -- Highlight references of word under cursor on cursor hold
         local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -93,7 +72,6 @@ return {
     local servers = {
       pyright = {},
       rust_analyzer = {},
-      -- eslint_d = {},
       ts_ls = {
         init_options = {
           hostInfo = 'neovim',
