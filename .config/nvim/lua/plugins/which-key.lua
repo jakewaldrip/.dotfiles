@@ -13,7 +13,7 @@ return {
     spec = {
       -- Top Level
       { '<leader>c', group = '[C]ode' },
-      { '<leader>u', group = '[U]niform' },
+      { '<leader>u', group = '[U]tilities' },
       { '<leader>e', group = '[E]rrors' },
       { '<leader>g', group = '[G]it' },
       { '<leader>b', group = '[B]uffer' },
