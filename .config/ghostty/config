@@ -5,7 +5,7 @@ font-size = 16
 cursor-style = block
 cursor-style-blink = false
 
-background-opacity = 0.90
-background-blur-radius = 12
+# background-opacity = 0.90
+# background-blur-radius = 12
 
 macos-titlebar-style = tabs
