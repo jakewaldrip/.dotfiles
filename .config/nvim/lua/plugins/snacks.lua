@@ -23,7 +23,6 @@ return {
         },
         recent = {
           layout = {
-            preset = 'dropdown',
             layout = {
               backdrop = false,
               width = 0.5,
