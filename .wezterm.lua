@@ -1,7 +1,7 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
-config.color_scheme = "Gruvbox Dark (Gogh)"
+config.color_scheme = "Everforest Dark (Gogh)"
 
 -- Blue Tone Dark Theme
 -- config.color_scheme = "Catppuccin Mocha"
@@ -18,12 +18,12 @@ config.color_scheme = "Gruvbox Dark (Gogh)"
 config.font = wezterm.font("0xProto Nerd Font Mono")
 config.font_size = 16
 
-config.enable_tab_bar = false
+config.enable_tab_bar = true
 
 config.window_decorations = "RESIZE"
 
-config.window_background_opacity = 0.92
-config.macos_window_background_blur = 10
+-- config.window_background_opacity = 0.92
+-- config.macos_window_background_blur = 10
 
 -- Key bindings
 local act = wezterm.action
