@@ -44,3 +44,4 @@ bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
 source $package_path/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $package_path/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+export PATH="/usr/local/sbin:$PATH"
