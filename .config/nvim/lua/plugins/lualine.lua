@@ -21,7 +21,7 @@ return {
         },
       },
       lualine_c = { 'filename' },
-      lualine_x = { 'copilot', 'branch' },
+      lualine_x = { 'branch' },
       lualine_y = { 'lsp_status' },
       lualine_z = { 'location' },
     },
