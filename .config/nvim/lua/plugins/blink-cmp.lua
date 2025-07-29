@@ -3,13 +3,14 @@
 
 return {
   'saghen/blink.cmp',
-  lazy = false, -- lazy loading handled internally
-  version = 'v0.*', -- use a release tag to download pre-built binaries
+  lazy = false,     -- lazy loading handled internally
+  version = 'v1.*', -- use a release tag to download pre-built binaries
   opts = {
 
     -- Disable for markdown
     enabled = function()
-      return not vim.tbl_contains({ 'markdown', 'copilot-chat' }, vim.bo.filetype) and vim.bo.buftype ~= 'prompt' and vim.b.completion ~= false
+      return not vim.tbl_contains({ 'markdown', 'copilot-chat' }, vim.bo.filetype) and vim.bo.buftype ~= 'prompt' and
+      vim.b.completion ~= false
     end,
 
     appearance = {

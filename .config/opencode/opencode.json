@@ -1,0 +1,12 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "theme": "everforest",
+  "autoupdate": true,
+  "mcp": {
+    "graphite": {
+      "type": "local",
+      "command": ["gt", "mcp"],
+      "enabled": true
+    }
+  }
+}
