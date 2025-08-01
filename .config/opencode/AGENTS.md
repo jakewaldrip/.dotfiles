@@ -17,3 +17,21 @@
 
 ## Styling
 * Prefer to use destructured objects as parameters for functions you create
+
+## Subagent Usage Policy
+
+1. Always Attempt Subagent Delegation
+ • For every test or task, the system must first attempt to delegate the operation to a relevant subagent as defined in the agent configuration markdown
+ files.
+
+2. Prompt for Confirmation if No Subagent Available
+ • If no suitable subagent is found for the requested operation, the system must prompt the user:
+  • "No subagent is available for this task. Would you like to proceed without a subagent, my Lord?"
+
+3. User Decision
+ • If the user confirms, proceed without a subagent.
+ • If the user declines, abort the operation and await further instructions.
+
+4. Documentation and Enforcement
+ • All workflows and automation referencing agent configuration must respect this policy.
+ • This file should be referenced by any meta-agent or orchestration logic to ensure compliance.

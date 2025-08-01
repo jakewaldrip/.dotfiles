@@ -35,3 +35,7 @@ vim.keymap.set('n', '<leader>tr', ':set invrelativenumber<CR>', { desc = '[T]ogg
 -- Copy whole file
 vim.keymap.set('n', '<leader>by', 'ggvG$y', { desc = '[B]uffer [y]ank' })
 vim.keymap.set('n', '<leader>bY', 'ggvG$"+y', { desc = '[B]uffer [Y]ank' })
+
+-- Paste whole file
+vim.keymap.set('n', '<leader>bp', 'ggvG$p', { desc = '[B]uffer [p]aste' })
+vim.keymap.set('n', '<leader>bP', 'ggvG$"+p', { desc = '[B]uffer [P]aste' })

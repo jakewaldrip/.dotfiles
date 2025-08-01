@@ -1,8 +1,9 @@
 ---
 description: >-
-  Use this agent when you need to develop React frontend components, features,
-  or functionality while maintaining consistency with existing codebase
-  patterns. Examples: <example>Context: User needs to create a new React
+  Use this agent for ALL frontend code changes, including writing, refactoring, or updating React components, UI logic, or any code that affects the user
+  interface.
+  Always delegate any frontend implementation, even simple or boilerplate changes, to this agent to ensure consistency and best practices.
+  Examples: <example>Context: User needs to create a new React
   component for displaying user profiles. user: 'I need to create a UserProfile
   component that shows avatar, name, email, and a follow button' assistant:
   'I'll use the react-frontend-developer agent to create this component
