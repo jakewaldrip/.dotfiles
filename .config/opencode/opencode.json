@@ -2,6 +2,11 @@
   "$schema": "https://opencode.ai/config.json",
   "theme": "everforest",
   "autoupdate": true,
+  "agent": {
+    "plan": {
+      "disable": true
+    }
+  },
   "mcp": {
     "graphite": {
       "type": "local",
