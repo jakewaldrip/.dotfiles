@@ -119,7 +119,7 @@ Use the following metadata for the research document frontmatter:
      - `notes/plans/build-thing.md` - Past exploration of Y
 
      ## Related Research
-     [Links to other research documents in notes/shared/research/]
+     [Links to other research documents in notes/research/]
 
      ## Open Questions
      [Any areas that need further investigation]

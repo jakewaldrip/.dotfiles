@@ -234,7 +234,7 @@ After structure approval:
 ## References
 
 - Original ticket: `notes/ticket/eng_XXXX.md`
-- Related research: `notes/code/[relevant].md`
+- Related research: `notes/research/[relevant].md`
 - Similar implementation: `[file:line]`
 ```
 
