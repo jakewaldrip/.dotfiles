@@ -7,6 +7,3 @@
 * Do not try to build the project, it will only serve to slow you down
 * Do not ever run **all** tests at once
 * Do not run tests at all unless specifically told to by the **USER**
-
-## Styling
-* Prefer to use destructured objects as parameters for functions you create
