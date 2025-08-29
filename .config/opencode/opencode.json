@@ -2,6 +2,10 @@
   "$schema": "https://opencode.ai/config.json",
   "theme": "everforest",
   "autoupdate": true,
+  "keybinds": {
+    "session_child_cycle": "<leader>right",
+    "session_child_cycle_reverse": "<leader>left"
+  },
   "agent": {
     "plan": {
       "disable": true
