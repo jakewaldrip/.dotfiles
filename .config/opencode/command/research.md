@@ -64,14 +64,6 @@ The user will provide a ticket for you to read and begin researching.
    - Highlight patterns, connections, and architectural decisions
    - Answer the user's specific questions with concrete evidence
 
-5. **Gather metadata for the research document:**
-
-Use the following metadata for the research document frontmatter:
-
-**metadata for frontmatter**
-
-!`agentic metadata`
-
 6. **Generate research document:**
    - Filename: `notes/research/date_topic.md`
    - Use the metadata gathered in step 5, mapping XML tags to frontmatter fields

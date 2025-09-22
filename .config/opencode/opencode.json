@@ -6,16 +6,11 @@
     "session_child_cycle": "<leader>right",
     "session_child_cycle_reverse": "<leader>left"
   },
-  "agent": {
-    "plan": {
-      "disable": true
-    }
-  },
   "mcp": {
     "graphite": {
       "type": "local",
       "command": ["gt", "mcp"],
-      "enabled": true
+      "enabled": false
     }
   }
 }
