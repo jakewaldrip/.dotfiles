@@ -1,22 +1,33 @@
 ---
-description: Research a ticket or provide a prompt for ad-hoc research. It is best to run this command in a new session.
+description: Create a readme targeting developers in the code base for the end to end functionality of a feature. How to use and how to integrate with it.
 ---
 
-# Research Codebase
+# Document Feature
 
-You are tasked with conducting comprehensive research across the codebase to answer user questions by spawning tasks and synthesizing their findings.
+You are tasked with creating a README.md file to document a feature in a code base end to end by spawning subtasks and synthesizing their findings.
 
-The user will provide a ticket for you to read and begin researching.
+The user will provide the feature we are discussing as well as a file denoting its entry point.
+
+## **CRITICAL**
+- Use **code-locator** for locating relevant files
+- Use **code-analyzer** for analyzing the files found by code-locator
+- Use **code-pattern-finder** for finding codebase patterns as needed
+- Your purpose is to analyze and create a README file, leverage the subagents to find the information you need
+
+## What we are not doing
+- Making any changes to the code
+- Proposing any changes to the code
+- Running any builds or tests or scripts
 
 <execute-steps>
-1. **Read the ticket first:**
-   - **IMPORTANT**: Use the Read tool WITHOUT limit/offset parameters to read entire files
-   - **CRITICAL**: Read these files yourself in the main context before spawning any sub-tasks
-   - This ensures you have full context before decomposing the research
+1. **Validate what it is that you will be documenting:**
+    - Ask the user follow up questions to narrow in on exactly what the feature being documented is
+    - Narrow in on the scope of what you will be documenting
+        - You want to find out if you should document only a portion of the feature (e.g. the backend), or if you should generate documetation end to end
+    - When you think you have the answer, ask the user for confirmation and proceed when they verify that you are documenting the correct feature
 
 2. **Detail the steps needed to perform the research:**
-    - Break down the user's ticket into composable research areas
-    - Take time to think about the underlying patterns, connections, and architectural the ticket has provided
+    - Take time to think about the underlying patterns, connections, and architectural the feature could have
     - Identify specific components, patterns, or concepts to investigate
     - Lay out what the code-locator or notes-locator should look for
     - Specify what patterns the code-pattern-finder should look for
@@ -54,84 +65,68 @@ The user will provide a ticket for you to read and begin researching.
    - Don't write detailed prompts about HOW to search - the agents already know
 
 4. **Wait for all sub-agents to complete and synthesize findings:**
-   - IMPORTANT: Wait for ALL sub-agent tasks to complete before proceeding
+   - **IMPORTANT**: Wait for ALL sub-agent tasks to complete before proceeding
    - Compile all sub-agent results (both codebase and notes findings)
    - Prioritize live codebase findings as primary source of truth
    - Use notes/ findings as supplementary historical context
    - Connect findings across different components
    - Include specific file paths and line numbers for reference
    - Highlight patterns, connections, and architectural decisions
-   - Answer the user's specific questions with concrete evidence
 
-5. **Generate research document:**
-   - Filename: `notes/research/date_topic.md`
-   - Structure the document with YAML frontmatter followed by content:
+
+5. **Generate README.md document:**
+   - Filename: `notes/readmes/date_topic.md`
+   - **IMPORTANT**: Use diagrams and codeblocks frequently. Avoid walls of text in describing a feature, instead prefer to show how its used and where the pieces connect
+   - Structure the document with YAML frontmatter followed by content following the template below:
      ```markdown
-     ---
-     date: [Current date and time with timezone in ISO format]
-     git_commit: [from metadata]
-     branch: [from metadata]
-     repository: [from metadata]
-     topic: "[User's Question/Topic]"
-     tags: [research, codebase, relevant-component-names]
-     last_updated: [from metadata]
-     ---
-
-     ## Ticket Synopsis
-     [Synopsis of the ticket information]
+     ## Feature Documentation
+     [Name of the feature]
 
      ## Summary
-     [High-level findings answering the user's question]
+     [Synopsis of the feature]
 
-     ## Detailed Findings
+     ## Extending
+
+     ### [Extendable Portion of Feature 1]
+     - Why you might want to extend this portion of the feature (e.g. adding a new column to a filter so that we can filter on additional data)
+     - All locations where you would need to add code to extend this portion of the feature (e.g. add a new property to the filter object and update the SQL)
+     - Gotchas and things to keep in mind
+
+     ### [Extendable Portion of Feature 2]
+     - Why you might want to extend this portion of the feature (e.g. supporting a new market or partner in the feature so that we can onboard a new market)
+     - All locations where you would need to add code to extend this portion of the feature (e.g. adding a condition to the market slug check)
+     - Gotchas and things to keep in mind
+
+     ## Detailed findings
 
      ### [Component/Area 1]
      - Finding with reference ([file.ext:line])
      - Connection to other components
      - Implementation details
+     - Diagrams and code blocks demostrating the feature
 
      ### [Component/Area 2]
      - Finding with reference ([file.ext:line])
      - Connection to other components
      - Implementation details
+     - Diagrams and code blocks demostrating the feature
      ...
 
      ## Code References
      - `path/to/file.py:123` - Description of what's there
      - `another/file.ts:45-67` - Description of the code block
+     - `path/to/tests.spec.ts` - Path to a test file for the feature
 
      ## Architecture Insights
-     [Patterns, conventions, and design decisions discovered]
+     [Patterns, conventions, and design decisions discovered with diagrams]
 
      ## Historical Context (from notes/)
      [Relevant insights from notes/ directory with references]
      - `notes/research/something.md` - Historical decision about X
      - `notes/plans/build-thing.md` - Past exploration of Y
-
-     ## Related Research
-     [Links to other research documents in notes/research/]
-
-     ## Open Questions
-     [Any areas that need further investigation]
      ```
+ </execute-steps>
 
-6. **Present findings:**
-   - Present a concise summary of findings to the user
-   - Include key file references for easy navigation
-   - Ask if they have follow-up questions or need clarification
-
-7. **Handle follow-up questions:**
-   - If the user has follow-up questions, append to the same research document
-   - Update the fields `last_updated` and `last_updated_by` to reflect the update
-   - Add `last_updated_note: "Added follow-up research for [brief description]"` to frontmatter
-   - Add a new section: `## Follow-up Research [timestamp]`
-   - Spawn new sub-agents as needed for additional investigation
-    - Continue updating the document and syncing
-
-8. **Update ticket status** to 'researched' by editing the ticket file's frontmatter.
-
-Use the todowrite tool to create a structured task list for the 8 steps above, marking each as pending initially.
-</execute-steps>
 
 ## Important notes:
 - Follow the three-phase sequence: Locate → Find Patterns → Analyze
@@ -150,13 +145,7 @@ Use the todowrite tool to create a structured task list for the 8 steps above, m
   - ALWAYS read mentioned files first before spawning sub-tasks (step 1)
   - ALWAYS wait for all sub-agents to complete before synthesizing (step 4)
   - NEVER write the research document with placeholder values
-- **Frontmatter consistency**:
-  - Always include frontmatter at the beginning of research documents
-  - Keep frontmatter fields consistent across all research documents
-  - Update frontmatter when adding follow-up research
-  - Use snake_case for multi-word field names (e.g., `last_updated`, `git_commit`)
-  - Tags should be relevant to the research topic and components studied
 
-**ticket**
-
+<user-feature-description>
 $ARGUMENTS
+</user-feature-description>
