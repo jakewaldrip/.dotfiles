@@ -20,6 +20,7 @@ The user will provide the feature we are discussing as well as a file denoting i
 - Running any builds or tests or scripts
 
 <execute-steps>
+
 1. **Validate what it is that you will be documenting:**
     - Ask the user follow up questions to narrow in on exactly what the feature being documented is
     - Narrow in on the scope of what you will be documenting
