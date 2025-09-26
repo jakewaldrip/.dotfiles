@@ -9,6 +9,7 @@ You are tasked with conducting comprehensive research across the codebase to ans
 The user will provide a ticket for you to read and begin researching.
 
 <execute-steps>
+
 1. **Read the ticket first:**
    - **IMPORTANT**: Use the Read tool WITHOUT limit/offset parameters to read entire files
    - **CRITICAL**: Read these files yourself in the main context before spawning any sub-tasks
@@ -131,6 +132,7 @@ The user will provide a ticket for you to read and begin researching.
 8. **Update ticket status** to 'researched' by editing the ticket file's frontmatter.
 
 Use the todowrite tool to create a structured task list for the 8 steps above, marking each as pending initially.
+
 </execute-steps>
 
 ## Important notes:
