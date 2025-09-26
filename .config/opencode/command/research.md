@@ -8,6 +8,8 @@ You are tasked with conducting comprehensive research across the codebase to ans
 
 The user will provide a ticket for you to read and begin researching.
 
+## Steps to execute
+
 <execute-steps>
 
 1. **Read the ticket first:**
@@ -159,6 +161,10 @@ Use the todowrite tool to create a structured task list for the 8 steps above, m
   - Use snake_case for multi-word field names (e.g., `last_updated`, `git_commit`)
   - Tags should be relevant to the research topic and components studied
 
+<ticket>
+
 **ticket**
 
 $ARGUMENTS
+
+</ticket>

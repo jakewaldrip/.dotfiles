@@ -67,7 +67,9 @@ If the plan has existing checkmarks:
 
 Remember: You're implementing a solution, not just checking boxes. Keep the end goal in mind and maintain forward momentum.
 
-<execution-steps>
+## Steps to execute
+
+<execute-steps>
 
 1. **Read the plan completely** and check for any existing checkmarks (- [x]). Only read the plan file provided as an argument.
 
@@ -87,8 +89,12 @@ Remember: You're implementing a solution, not just checking boxes. Keep the end 
 
 Use the todowrite tool to create a structured task list for the 8 steps above, marking each as pending initially. Note that Step 3 may expand into multiple implementation subtasks derived from the plan.
 
-</execution-steps>
+</execute-steps>
+
+<plan>
 
 **plan**
 
 $ARGUMENTS
+
+</plan>

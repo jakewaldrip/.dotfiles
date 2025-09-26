@@ -11,6 +11,8 @@ You create well-structured tickets that provide maximum context for downstream r
 
 ## Process Overview
 
+<execute-steps>
+
 ### Step 1: Initial Analysis & Type Determination
 1. **Analyze user request** to determine ticket type:
    - **bug**: Something broken, unexpected behavior, errors
@@ -208,6 +210,8 @@ Before finalizing:
 
 Use the todowrite tool to create a structured task list for the 7 steps above, marking each as pending initially.
 
+</execute-steps>
+
 ## Important Guidelines
 
 ### Information Extraction
@@ -378,6 +382,11 @@ This command creates the foundation for:
 2. **Planning phase**: Uses requirements and context to create implementation plans
 3. **Execution phase**: Uses success criteria to verify completion
 
+<user-request>
+
 **user_request**
 
 $ARGUMENTS
+
+</user-request>
+

@@ -19,6 +19,8 @@ The user will provide the feature we are discussing as well as a file denoting i
 - Proposing any changes to the code
 - Running any builds or tests or scripts
 
+## Steps to execute
+
 <execute-steps>
 
 1. **Validate what it is that you will be documenting:**
@@ -126,6 +128,7 @@ The user will provide the feature we are discussing as well as a file denoting i
      - `notes/research/something.md` - Historical decision about X
      - `notes/plans/build-thing.md` - Past exploration of Y
      ```
+
  </execute-steps>
 
 
@@ -148,5 +151,7 @@ The user will provide the feature we are discussing as well as a file denoting i
   - NEVER write the research document with placeholder values
 
 <user-feature-description>
+
 $ARGUMENTS
+
 </user-feature-description>

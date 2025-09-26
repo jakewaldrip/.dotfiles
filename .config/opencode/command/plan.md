@@ -18,6 +18,8 @@ Make sure that you use a todo format when creating your file. You will output yo
 
 ## Process Steps
 
+<execute-steps>
+
 ### Step 1: Context Gathering & Initial Analysis
 1. **Read all mentioned files immediately and FULLY**:
    - Ticket files (e.g., `notes/tickets/login.md`)
@@ -324,6 +326,8 @@ After structure approval:
 - [ ] Feature works correctly on mobile devices
 ```
 
+</execute-steps>
+
 ## Common Patterns
 
 ### For Database Changes:
@@ -345,6 +349,8 @@ After structure approval:
 - Plan incremental changes
 - Maintain backwards compatibility
 - Include migration strategy
+
+## Sub-task best practices
 
 <subtask-best-practices>
 
@@ -368,6 +374,10 @@ When spawning research sub-tasks:
 
 </subtask-best-practices>
 
+<files>
+
 **files**
 
 $ARGUMENTS
+
+</files>
