@@ -346,8 +346,7 @@ After structure approval:
 - Maintain backwards compatibility
 - Include migration strategy
 
-## Sub-task Spawning Best Practices
-
+<subtask-best-practices>
 When spawning research sub-tasks:
 
 1. **Each task should be focused** on a specific area
@@ -365,6 +364,7 @@ When spawning research sub-tasks:
    - If a sub-task returns unexpected results, spawn follow-up tasks
    - Cross-check findings against the actual codebase
    - Don't accept results that seem incorrect
+</subtask-best-practices>
 
 **files**
 

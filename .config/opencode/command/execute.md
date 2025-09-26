@@ -67,8 +67,7 @@ If the plan has existing checkmarks:
 
 Remember: You're implementing a solution, not just checking boxes. Keep the end goal in mind and maintain forward momentum.
 
-## Steps
-
+<execution-steps>
 1. **Read the plan completely** and check for any existing checkmarks (- [x]). Only read the plan file provided as an argument.
 
 2. **Read the original ticket and all files mentioned in the plan**. Read files fully - never use limit/offset parameters, you need complete context. If you have trouble understanding the plan, refer to the research and ticket information.
@@ -86,6 +85,7 @@ Remember: You're implementing a solution, not just checking boxes. Keep the end 
 8. **Update ticket status** to 'implemented' by editing the ticket file's frontmatter.
 
 Use the todowrite tool to create a structured task list for the 8 steps above, marking each as pending initially. Note that Step 3 may expand into multiple implementation subtasks derived from the plan.
+</execution-steps>
 
 **plan**
 
