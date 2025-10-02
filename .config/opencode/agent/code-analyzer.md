@@ -1,7 +1,7 @@
 ---
 description: Analyzes codebase implementation details. Call the code-analyzer agent when you need to find detailed information about specific components.
 mode: subagent
-model: anthropic/claude-opus-4-1-20250805
+model: anthropic/claude-sonnet-4-5-20250929
 temperature: 0.1
 tools:
   read: true

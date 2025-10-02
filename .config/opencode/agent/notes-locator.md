@@ -1,7 +1,7 @@
 ---
 description: Discovers relevant documents in notes/ directory (We use this for all sorts of metadata storage!). This is really only relevant/needed when you're in a reseaching mood and need to figure out if we have random notes written down that are relevant to your current research task. Based on the name, I imagine you can guess this is the `notes` equivilent of `code-locator`
 mode: subagent
-model: anthropic/claude-opus-4-1-20250805
+model: anthropic/claude-sonnet-4-5-20250929
 temperature: 0.1
 tools:
   read: true
