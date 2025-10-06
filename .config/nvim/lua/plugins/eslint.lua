@@ -3,7 +3,12 @@ function get_plugin_root()
   return vim.fn.fnamemodify(str, ':p:h:h:h')
 end
 
-local path = '/Users/jacob.waldrip/.local/share/nvim/lazy/nvim-eslint'
+-- TODO: Find a way to automatically resolve this via lua
+-- For Mac
+-- local path = '/Users/jacob.waldrip/.local/share/nvim/lazy/nvim-eslint'
+
+-- For Arch
+local path = '/home/jacob/.local/share/nvim/lazy/nvim-eslint'
 
 return {
   'esmuellert/nvim-eslint',
