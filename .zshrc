@@ -10,7 +10,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
   export package_path="$(brew --prefix)"
   export powerlevel_path="$(brew --prefix)/share"
 else
-  package_path="/usr/"
+  package_path="/usr/share"
   powerlevel_path="$HOME"
 fi
 
@@ -42,6 +42,6 @@ setopt hist_verify
 # completion using arrow keys (based on history)
 bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
-source $package_path/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $package_path/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $package_path/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $package_path/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 export PATH="/usr/local/sbin:$PATH"

@@ -1,11 +1,19 @@
-theme = Everforest Dark   Hard
-font-family = 0xProto Nerd Font Mono
+# Dynamic theme colors
+config-file = ?"~/.config/omarchy/current/theme/ghostty.conf"
+
+# Font
+font-family = "CaskaydiaMono Nerd Font"
+font-style = Regular
 font-size = 16
 
-cursor-style = block
+# Window
+confirm-close-surface=false
+resize-overlay = never
+
+# Cursor styling
+cursor-style = "block"
 cursor-style-blink = false
+shell-integration-features = no-cursor
 
-# background-opacity = 0.90
-# background-blur-radius = 12
-
-macos-titlebar-style = tabs
+# Keyboard bindings
+keybind = f11=toggle_fullscreen
