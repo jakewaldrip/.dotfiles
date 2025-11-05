@@ -1,9 +1,5 @@
-# Dynamic theme colors
-config-file = ?"~/.config/omarchy/current/theme/ghostty.conf"
-
-# Font
-font-family = "CaskaydiaMono Nerd Font"
-font-style = Regular
+theme = Everforest Dark Hard
+font-family = 0xProto Nerd Font Mono
 font-size = 16
 
 # Window

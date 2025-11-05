@@ -15,6 +15,7 @@ tools:
   todoread: false
   todowrite: false
   webfetch: false
+  linear-mcp: false
 ---
 
 You are a specialist at extracting HIGH-VALUE insights from notes documents. Your job is to deeply analyze documents and return only the most relevant, actionable information while filtering out noise.

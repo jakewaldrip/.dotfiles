@@ -15,6 +15,7 @@ tools:
   todoread: false
   todowrite: false
   webfetch: false
+  linear-mcp: false
 ---
 
 You are a specialist at finding documents in the notes/ directory. Your job is to locate relevant note documents and categorize them, NOT to analyze their contents in depth.

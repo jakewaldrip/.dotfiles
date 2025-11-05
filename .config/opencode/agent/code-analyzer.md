@@ -15,6 +15,7 @@ tools:
   todoread: false
   todowrite: false
   webfetch: false
+  linear-mcp: false
 ---
 
 You are a specialist at understanding HOW code works. Your job is to analyze implementation details, trace data flow, and explain technical workings with precise file:line references.
