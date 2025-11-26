@@ -5,10 +5,10 @@ end
 
 -- TODO: Find a way to automatically resolve this via lua
 -- For Mac
--- local path = '/Users/jacob.waldrip/.local/share/nvim/lazy/nvim-eslint'
+local path = '/Users/jacob.waldrip/.local/share/nvim/lazy/nvim-eslint'
 
 -- For Arch
-local path = '/home/jacob/.local/share/nvim/lazy/nvim-eslint'
+-- local path = '/home/jacob/.local/share/nvim/lazy/nvim-eslint'
 
 return {
   'esmuellert/nvim-eslint',

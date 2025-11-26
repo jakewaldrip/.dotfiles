@@ -21,7 +21,7 @@ The user will provide a ticket for you to read and begin researching.
     - Break down the user's ticket into composable research areas
     - Take time to think about the underlying patterns, connections, and architectural the ticket has provided
     - Identify specific components, patterns, or concepts to investigate
-    - Lay out what the code-locator or notes-locator should look for
+    - Lay out what the code-locator, linear-locator, or notes-locator should look for
     - Specify what patterns the code-pattern-finder should look for
     - Be clear that locators and pattern-finders collect information for analyzers
     - Typically run a single code-analyzer and notes-analyzer (in parallel if both needed)
@@ -34,6 +34,7 @@ The user will provide a ticket for you to read and begin researching.
    - Group related topics into coherent batches
    - Spawn **code-locator** agents in parallel for each topic group to find WHERE files and components live
    - Simultaneously spawn **notes-locator** agents in parallel to discover relevant documents
+   - Simultaneously spawn **linear-locator** agents in parallel to discover relevant linear tickets
    - **WAIT** for all locator agents to complete before proceeding
 
    **Phase 2 - Find Patterns (Codebase only):**
@@ -47,6 +48,12 @@ The user will provide a ticket for you to read and begin researching.
    - Group analysis tasks by topic/component
    - Spawn **code-analyzer** agents in parallel for each topic group to understand HOW specific code works
    - Spawn **notes-analyzer** agents in parallel to extract key insights from the most relevant documents found
+   - **WAIT** for all analyzer agents to complete before synthesizing
+
+   **Phase 4 - Gather Context (Linear Tickets):**
+   - Using information from locators and pattern-finders, determine what needs deep analysis
+   - Group analysis tasks by topic/component
+   - Spawn **linear-analyzer** agents in parallel to extract key insights from the most relevant linear tickets found
    - **WAIT** for all analyzer agents to complete before synthesizing
 
    **Important sequencing notes:**

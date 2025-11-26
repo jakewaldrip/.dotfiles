@@ -11,7 +11,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
   export powerlevel_path="$(brew --prefix)/share"
   export opencode_path="$HOME/.opencode/bin"
 else
-  package_path="/usr/share"
+  package_path="/usr/"
   powerlevel_path="$HOME"
   opencode_path="/home/jacob/.opencode/bin"
 fi
@@ -45,9 +45,15 @@ setopt hist_verify
 # completion using arrow keys (based on history)
 bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
-source $package_path/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $package_path/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 export PATH="/usr/local/sbin:$PATH"
 
 # opencode
 export PATH=$opencode_path:$PATH
+
+if [[ "$(uname)" == "Darwin" ]]; then
+  source $package_path/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+  source $package_path/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+else
+  source $package_path/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  source $package_path/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
