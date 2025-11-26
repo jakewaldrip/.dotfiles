@@ -9,9 +9,11 @@ fi
 if [[ "$(uname)" == "Darwin" ]]; then
   export package_path="$(brew --prefix)"
   export powerlevel_path="$(brew --prefix)/share"
+  export opencode_path="$HOME/.opencode/bin"
 else
   package_path="/usr/share"
   powerlevel_path="$HOME"
+  opencode_path="/home/jacob/.opencode/bin"
 fi
 
 # Vars
@@ -45,3 +47,6 @@ bindkey '^[[B' history-search-forward
 source $package_path/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $package_path/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 export PATH="/usr/local/sbin:$PATH"
+
+# opencode
+export PATH=$opencode_path:$PATH

@@ -1,7 +1,6 @@
 ---
 description: code-pattern-finder is a useful subagent_type for finding similar implementations, usage examples, or existing patterns that can be modeled after. It will give you concrete code examples based on what you're looking for! It's sorta like code-locator, but it will not only tell you the location of files, it will also give you code details!
 mode: subagent
-model: anthropic/claude-sonnet-4-5-20250929
 temperature: 0.1
 tools:
   read: true
