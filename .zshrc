@@ -51,9 +51,9 @@ export PATH="/usr/local/sbin:$PATH"
 export PATH=$opencode_path:$PATH
 
 if [[ "$(uname)" == "Darwin" ]]; then
-  source $package_path/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-  source $package_path/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-else
   source $package_path/share/zsh-autosuggestions/zsh-autosuggestions.zsh
   source $package_path/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+else
+  source $package_path/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+  source $package_path/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
