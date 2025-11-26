@@ -22,6 +22,7 @@ export ZDIR=$HOME/zsh
 # Sourcing
 source $ZDIR/alias.sh
 source $ZDIR/this-env.sh
+export PATH="$ZDIR/scripts:$PATH"
 
 # Lazy load all plugins
 for f in $ZDIR/plugins/*; do

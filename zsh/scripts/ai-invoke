@@ -1,0 +1,11 @@
+#!/usr/bin/env zsh
+
+working_dir="$1"
+context_file="$2"
+line_num="$3"
+command_name="$4"
+
+cd $working_dir
+
+context_prompt="@$context_file:$line_num"
+opencode run --command $command_name --model $DEFAULT_MODEL "$context_prompt"
