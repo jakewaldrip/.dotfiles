@@ -39,3 +39,25 @@ vim.keymap.set('n', '<leader>bY', 'ggvG$"+y', { desc = '[B]uffer [Y]ank' })
 -- Paste whole file
 vim.keymap.set('n', '<leader>bp', 'ggvG$p', { desc = '[B]uffer [p]aste' })
 vim.keymap.set('n', '<leader>bP', 'ggvG$"+p', { desc = '[B]uffer [P]aste' })
+
+-- Invoke Editor AI integration
+local function invoke_ai(command_name)
+  ---@diagnostic disable-next-line: undefined-field
+  local cwd = vim.loop.cwd();
+  local filepath = vim.fn.expand("%:.")
+
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  local line_num = cursor_pos[1]
+
+  local cmd = string.format("nohup ai-invoke %s %s %d %s &", cwd, filepath, line_num, command_name)
+  vim.notify("Running agent type " .. command_name)
+  vim.fn.system(cmd)
+end
+
+vim.keymap.set('n', '<leader>as', function()
+  invoke_ai("ai-small")
+end, { desc = '[A]i [S]mall' })
+
+vim.keymap.set('n', '<leader>am', function()
+  invoke_ai("ai-medium")
+end, { desc = '[A]i [M]edium' })
