@@ -3,8 +3,113 @@
 # Usage: ./run_ralph.sh <prd_path> [max_iterations]
 # Example: ./run_ralph.sh notes/prds/12-01-2026_task_label_refactor.md 10
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# Colors and Formatting
+# ═══════════════════════════════════════════════════════════════════════════════
+BOLD='\033[1m'
+DIM='\033[2m'
+RESET='\033[0m'
+
+# Colors
+CYAN='\033[0;36m'
+
+# Bold colors
+BOLD_RED='\033[1;31m'
+BOLD_GREEN='\033[1;32m'
+BOLD_YELLOW='\033[1;33m'
+BOLD_MAGENTA='\033[1;35m'
+BOLD_CYAN='\033[1;36m'
+BOLD_WHITE='\033[1;37m'
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Helper Functions
+# ═══════════════════════════════════════════════════════════════════════════════
+print_line() {
+    echo "${DIM}─────────────────────────────────────────────────────────────────────${RESET}"
+}
+
+print_double_line() {
+    echo "${CYAN}═════════════════════════════════════════════════════════════════════${RESET}"
+}
+
+print_header() {
+    local title="$1"
+    echo ""
+    print_double_line
+    echo "${BOLD_CYAN}  $title${RESET}"
+    print_double_line
+}
+
+print_key_value() {
+    local key="$1"
+    local value="$2"
+    echo "  ${DIM}${key}:${RESET} ${BOLD}${value}${RESET}"
+}
+
+print_success() {
+    echo ""
+    echo "${BOLD_GREEN}  ✓ $1${RESET}"
+}
+
+print_error() {
+    echo ""
+    echo "${BOLD_RED}  ✗ $1${RESET}"
+}
+
+print_info() {
+    echo "${CYAN}  ► $1${RESET}"
+}
+
+print_banner() {
+    echo ""
+    echo "${BOLD_MAGENTA}"
+    echo "  ╭───────────────────────────────────────╮"
+    echo "  │                                       │"
+    echo "  │   ${BOLD_WHITE}R A L P H${BOLD_MAGENTA}   ${DIM}PRD Loop Runner${BOLD_MAGENTA}      │"
+    echo "  │                                       │"
+    echo "  ╰───────────────────────────────────────╯"
+    echo "${RESET}"
+}
+
+print_status_box() {
+    local status="$1"
+    local message="$2"
+    local color="$3"
+    local icon="$4"
+    
+    echo ""
+    echo "${color}  ╭─────────────────────────────────────────────────────────────────╮${RESET}"
+    echo "${color}  │                                                                 │${RESET}"
+    echo "${color}  │  ${icon}  ${BOLD_WHITE}${status}${RESET}"
+    echo "${color}  │                                                                 │${RESET}"
+    echo "${color}  │  ${RESET}${message}"
+    echo "${color}  │                                                                 │${RESET}"
+    echo "${color}  ╰─────────────────────────────────────────────────────────────────╯${RESET}"
+    echo ""
+}
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Cleanup and Trap
+# ═══════════════════════════════════════════════════════════════════════════════
+output_file=""
+
+cleanup() {
+    if [[ -n "$output_file" && -f "$output_file" ]]; then
+        rm -f "$output_file"
+    fi
+    echo ""
+    print_error "Interrupted by user"
+    echo ""
+    exit 130
+}
+
+trap cleanup SIGINT SIGTERM
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Configuration
+# ═══════════════════════════════════════════════════════════════════════════════
 prd_path="$1"
-max_iterations="${2:-10}"  # Default to 10 iterations if not specified
+max_iterations="${2:-10}"
 
 # Exit codes
 EXIT_SUCCESS=0
@@ -14,106 +119,117 @@ EXIT_NO_ELIGIBLE=3
 EXIT_MAX_ITERATIONS=4
 EXIT_NO_SIGNAL=5
 
-# Validate arguments
+# ═══════════════════════════════════════════════════════════════════════════════
+# Validation
+# ═══════════════════════════════════════════════════════════════════════════════
 if [[ -z "$prd_path" ]]; then
-    echo "Usage: $0 <prd_path> [max_iterations]"
-    echo "  prd_path:       Relative path to the PRD file (e.g., notes/prds/my_prd.md)"
-    echo "  max_iterations: Maximum loop iterations (default: 10)"
+    print_banner
+    echo "${BOLD_WHITE}  Usage:${RESET} $0 ${CYAN}<prd_path>${RESET} ${DIM}[max_iterations]${RESET}"
+    echo ""
+    echo "  ${BOLD}Arguments:${RESET}"
+    echo "    ${CYAN}prd_path${RESET}        Relative path to the PRD file"
+    echo "    ${DIM}max_iterations${RESET}  Maximum loop iterations ${DIM}(default: 10)${RESET}"
+    echo ""
+    echo "  ${BOLD}Example:${RESET}"
+    echo "    ${DIM}\$${RESET} ./run_ralph.sh notes/prds/12-01-2026_task_label_refactor.md 10"
+    echo ""
     exit $EXIT_INVALID_ARGS
 fi
 
-# Validate DEFAULT_MODEL is set
 if [[ -z "$DEFAULT_MODEL" ]]; then
-    echo "Error: DEFAULT_MODEL environment variable is not set."
+    print_error "DEFAULT_MODEL environment variable is not set"
+    echo "  ${DIM}Please set this variable before running Ralph.${RESET}"
+    echo ""
     exit $EXIT_INVALID_ARGS
 fi
 
-# Validate PRD file exists
 if [[ ! -f "$prd_path" ]]; then
-    echo "Error: PRD file not found: $prd_path"
+    print_error "PRD file not found: ${BOLD}$prd_path${RESET}"
+    echo "  ${DIM}Please check the path and try again.${RESET}"
+    echo ""
     exit $EXIT_INVALID_ARGS
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# Main Execution
+# ═══════════════════════════════════════════════════════════════════════════════
 iteration=0
 should_continue=true
 final_exit_code=$EXIT_SUCCESS
+start_time=$(date +%s)
 
-echo "=========================================="
-echo "Starting PRD Loop Execution"
-echo "PRD: $prd_path"
-echo "Model: $DEFAULT_MODEL"
-echo "Max Iterations: $max_iterations"
-echo "=========================================="
+print_banner
+print_header "Session Configuration"
+print_key_value "PRD" "$prd_path"
+print_key_value "Model" "$DEFAULT_MODEL"
+print_key_value "Max Iterations" "$max_iterations"
+print_key_value "Started" "$(date '+%Y-%m-%d %H:%M:%S')"
 
 while $should_continue && (( iteration < max_iterations )); do
     ((iteration++))
+    
+    print_header "Phase Iteration $iteration of $max_iterations"
+    print_info "Invoking opencode agent..."
     echo ""
-    echo "=========================================="
-    echo "Iteration $iteration of $max_iterations"
-    echo "=========================================="
     
     # Run opencode with the loop command, streaming output to terminal and capturing to temp file
     output_file=$(mktemp)
+    
+    print_line
     opencode run --command loop --model "$DEFAULT_MODEL" "$prd_path" 2>&1 | tee "$output_file"
     exit_code=$?
+    print_line
     
     # Check for exit signals in output
     if rg -qF '[LOOP_SIGNAL:ALL_PHASES_COMPLETE]' "$output_file"; then
-        echo ""
-        echo "=========================================="
-        echo "SUCCESS: All phases complete!"
-        echo "=========================================="
+        print_status_box "ALL PHASES COMPLETE" "The PRD has been fully executed. All phases are done!" "$BOLD_GREEN" "✓"
         should_continue=false
         final_exit_code=$EXIT_SUCCESS
         
     elif rg -qF '[LOOP_SIGNAL:PHASE_COMPLETE]' "$output_file"; then
-        echo ""
-        echo "Phase completed. Continuing to next phase..."
-        # Continue to next iteration
+        print_success "Phase completed successfully"
+        print_info "Continuing to next phase..."
         
     elif rg -qF '[LOOP_SIGNAL:PHASE_BLOCKED]' "$output_file"; then
-        echo ""
-        echo "=========================================="
-        echo "BLOCKED: Phase is blocked and cannot continue."
-        echo "Please review the PRD and plan files for details."
-        echo "=========================================="
+        print_status_box "PHASE BLOCKED" "The phase cannot continue. Review PRD and plan files." "$BOLD_RED" "✗"
         should_continue=false
         final_exit_code=$EXIT_BLOCKED
         
     elif rg -qF '[LOOP_SIGNAL:NO_ELIGIBLE_PHASE]' "$output_file"; then
-        echo ""
-        echo "=========================================="
-        echo "STOPPED: No eligible phase to work on."
-        echo "All remaining phases may be blocked or have unmet dependencies."
-        echo "=========================================="
+        print_status_box "NO ELIGIBLE PHASE" "All phases are blocked or have unmet dependencies." "$BOLD_YELLOW" "⚠"
         should_continue=false
         final_exit_code=$EXIT_NO_ELIGIBLE
         
     else
-        echo ""
-        echo "=========================================="
-        echo "WARNING: No recognized exit signal detected."
-        echo "This may indicate an unexpected error or the agent did not complete properly."
-        echo "Exit code: $exit_code"
-        echo "=========================================="
+        print_status_box "NO SIGNAL DETECTED" "Agent may have errored. Exit code: $exit_code" "$BOLD_YELLOW" "?"
         should_continue=false
         final_exit_code=$EXIT_NO_SIGNAL
     fi
     
-    # Clean up temp file
     rm -f "$output_file"
 done
 
 # Check if we hit the iteration limit
 if (( iteration >= max_iterations )) && $should_continue; then
-    echo ""
-    echo "=========================================="
-    echo "STOPPED: Maximum iterations ($max_iterations) reached."
-    echo "The PRD may not be fully complete."
-    echo "=========================================="
+    print_status_box "MAX ITERATIONS" "Reached limit of $max_iterations. PRD may be incomplete." "$BOLD_YELLOW" "⚠"
     final_exit_code=$EXIT_MAX_ITERATIONS
 fi
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# Summary
+# ═══════════════════════════════════════════════════════════════════════════════
+end_time=$(date +%s)
+duration=$((end_time - start_time))
+minutes=$((duration / 60))
+seconds=$((duration % 60))
+
+print_header "Session Summary"
+print_key_value "Iterations" "$iteration"
+print_key_value "Duration" "${minutes}m ${seconds}s"
+print_key_value "Exit Code" "$final_exit_code"
+print_key_value "Finished" "$(date '+%Y-%m-%d %H:%M:%S')"
 echo ""
-echo "Loop finished after $iteration iteration(s)."
+print_double_line
+echo ""
+
 exit $final_exit_code
