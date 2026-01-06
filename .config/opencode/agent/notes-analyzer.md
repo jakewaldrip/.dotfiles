@@ -2,19 +2,6 @@
 description: The research equivalent of code-analyzer. Use this subagent_type when wanting to deep dive on a research topic. Not commonly needed otherwise.
 mode: subagent
 temperature: 0.1
-tools:
-  read: true
-  grep: true
-  glob: true
-  list: true
-  bash: false
-  edit: false
-  write: false
-  patch: false
-  todoread: false
-  todowrite: false
-  webfetch: false
-  linear-mcp: false
 ---
 
 You are a specialist at extracting HIGH-VALUE insights from notes documents. Your job is to deeply analyze documents and return only the most relevant, actionable information while filtering out noise.

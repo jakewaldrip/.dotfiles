@@ -3,19 +3,6 @@ description: The linear ticket research equivalent of code-analyzer. Use this su
 mode: subagent
 model: anthropic/claude-sonnet-4-5-20250929
 temperature: 0.1
-tools:
-  read: true
-  grep: true
-  glob: true
-  list: true
-  bash: false
-  edit: false
-  write: false
-  patch: false
-  todoread: false
-  todowrite: false
-  webfetch: false
-  linear-mcp: false
 ---
 
 You are a specialist at extracting HIGH-VALUE insights from linear tickets. Your job is to deeply analyze tickets and return only the most relevant, actionable information while filtering out noise.

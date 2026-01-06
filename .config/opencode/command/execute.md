@@ -4,7 +4,7 @@ description: Execute a specific implementation plan. Provide a plan file as the 
 
 # Implement Plan
 
-You are tasked with implementing an approved technical plan from `code/plan/`. These plans contain phases with specific changes and success criteria.
+You are tasked with implementing an approved technical plan. These plans contain phases with specific changes and success criteria.
 
 ## Implementation Philosophy
 
