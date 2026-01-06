@@ -65,7 +65,7 @@ print_banner() {
     echo "${BOLD_MAGENTA}"
     echo "  ╭───────────────────────────────────────╮"
     echo "  │                                       │"
-    echo "  │   ${BOLD_WHITE}R A L P H${BOLD_MAGENTA}   ${DIM}PRD Loop Runner${BOLD_MAGENTA}      │"
+    echo "  │   ${BOLD_WHITE}R A L P H${BOLD_MAGENTA}   ${DIM}PRD Loop Runner${BOLD_MAGENTA}         │"
     echo "  │                                       │"
     echo "  ╰───────────────────────────────────────╯"
     echo "${RESET}"
@@ -76,7 +76,7 @@ print_status_box() {
     local message="$2"
     local color="$3"
     local icon="$4"
-    
+
     echo ""
     echo "${color}  ╭─────────────────────────────────────────────────────────────────╮${RESET}"
     echo "${color}  │                                                                 │${RESET}"
@@ -167,45 +167,45 @@ print_key_value "Started" "$(date '+%Y-%m-%d %H:%M:%S')"
 
 while $should_continue && (( iteration < max_iterations )); do
     ((iteration++))
-    
+
     print_header "Phase Iteration $iteration of $max_iterations"
     print_info "Invoking opencode agent..."
     echo ""
-    
+
     # Run opencode with the loop command, streaming output to terminal and capturing to temp file
     output_file=$(mktemp)
-    
+
     print_line
     opencode run --command loop --model "$DEFAULT_MODEL" "$prd_path" 2>&1 | tee "$output_file"
     exit_code=$?
     print_line
-    
+
     # Check for exit signals in output
     if rg -qF '[LOOP_SIGNAL:ALL_PHASES_COMPLETE]' "$output_file"; then
         print_status_box "ALL PHASES COMPLETE" "The PRD has been fully executed. All phases are done!" "$BOLD_GREEN" "✓"
         should_continue=false
         final_exit_code=$EXIT_SUCCESS
-        
+
     elif rg -qF '[LOOP_SIGNAL:PHASE_COMPLETE]' "$output_file"; then
         print_success "Phase completed successfully"
         print_info "Continuing to next phase..."
-        
+
     elif rg -qF '[LOOP_SIGNAL:PHASE_BLOCKED]' "$output_file"; then
         print_status_box "PHASE BLOCKED" "The phase cannot continue. Review PRD and plan files." "$BOLD_RED" "✗"
         should_continue=false
         final_exit_code=$EXIT_BLOCKED
-        
+
     elif rg -qF '[LOOP_SIGNAL:NO_ELIGIBLE_PHASE]' "$output_file"; then
         print_status_box "NO ELIGIBLE PHASE" "All phases are blocked or have unmet dependencies." "$BOLD_YELLOW" "⚠"
         should_continue=false
         final_exit_code=$EXIT_NO_ELIGIBLE
-        
+
     else
         print_status_box "NO SIGNAL DETECTED" "Agent may have errored. Exit code: $exit_code" "$BOLD_YELLOW" "?"
         should_continue=false
         final_exit_code=$EXIT_NO_SIGNAL
     fi
-    
+
     rm -f "$output_file"
 done
 
