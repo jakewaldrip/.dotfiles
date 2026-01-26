@@ -136,8 +136,8 @@ if [[ -z "$prd_path" ]]; then
     exit $EXIT_INVALID_ARGS
 fi
 
-if [[ -z "$DEFAULT_MODEL" ]]; then
-    print_error "DEFAULT_MODEL environment variable is not set"
+if [[ -z "$DEFAULT_EXEC_MODEL" ]]; then
+    print_error "DEFAULT_EXEC_MODEL environment variable is not set"
     echo "  ${DIM}Please set this variable before running Ralph.${RESET}"
     echo ""
     exit $EXIT_INVALID_ARGS
@@ -161,7 +161,7 @@ start_time=$(date +%s)
 print_banner
 print_header "Session Configuration"
 print_key_value "PRD" "$prd_path"
-print_key_value "Model" "$DEFAULT_MODEL"
+print_key_value "Exec Model" "$DEFAULT_EXEC_MODEL"
 print_key_value "Max Iterations" "$max_iterations"
 print_key_value "Started" "$(date '+%Y-%m-%d %H:%M:%S')"
 
@@ -176,7 +176,7 @@ while $should_continue && (( iteration < max_iterations )); do
     output_file=$(mktemp)
 
     print_line
-    opencode run --command loop --model "$DEFAULT_MODEL" "$prd_path" 2>&1 | tee "$output_file"
+    opencode run --command loop --model "$DEFAULT_EXEC_MODEL" "$prd_path" 2>&1 | tee "$output_file"
     exit_code=$?
     print_line
 
