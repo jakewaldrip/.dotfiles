@@ -1,7 +1,6 @@
 ---
 description: The linear ticket research equivalent of code-analyzer. Use this subagent_type when wanting to deep dive on a research topic. Not commonly needed otherwise.
 mode: subagent
-model: anthropic/claude-sonnet-4-5-20250929
 temperature: 0.1
 ---
 

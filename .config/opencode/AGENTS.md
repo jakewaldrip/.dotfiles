@@ -22,3 +22,20 @@
 - You have access to the graphite-mcp, use this to interact with `git` when possible
     - If unsure about gt command syntax, use the `graphite_learn_gt` tool first
     - branch_name is positional, not a flag
+    - Common patterns:
+      - `gt create <branch-name> --all --message "commit message"` (branch name is FIRST, before flags)
+      - `gt submit --stack` (to push entire stack)
+      - `gt modify --all` (to amend current commit)
+
+## Code Style
+
+- When writing logs, ALWAYS make sure the log message is static. It should NEVER contain variables inside of it
+    - If you need to include data or variables in the logs, use the `jsonPayload` parameter to do so
+
+## Handling Pre-existing CI/Test Failures
+
+When running validation commands (typecheck, tests, build), if failures occur:
+1. First check if the failing files are in your changeset (`git status`)
+2. If failing files are NOT in your changeset, note them as pre-existing issues and proceed
+3. Do NOT spend time investigating or fixing unrelated failures unless explicitly asked
+4. Document pre-existing failures in commit messages or plan notes for visibility

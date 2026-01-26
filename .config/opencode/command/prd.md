@@ -55,6 +55,11 @@ Plan: `notes/plans/phase_2_replace_joins.md`
 - [Any prior phases that must be completed first]
 - [Any context or files that should be reviewed before starting]
 
+## Pre-flight Checklist
+- [ ] Load relevant skills: [example skill #1], [example skill #2]
+- [ ] Read pattern files listed in Key Files section
+- [ ] Run codegen if GraphQL schema changed in previous phase
+
 ## Key Files
 | File | Purpose | Lines of Interest |
 |------|---------|-------------------|

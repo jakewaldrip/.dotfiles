@@ -16,6 +16,5 @@
       "command": ["gt", "mcp"],
       "enabled": true
     }
-  },
-  "plugin": ["@tarquinen/opencode-dcp@latest"]
+  }
 }

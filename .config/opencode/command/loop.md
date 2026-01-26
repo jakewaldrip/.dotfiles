@@ -60,6 +60,9 @@ $ARGUMENTS
 8. Execute the implementation:
     - Work through each item in the implementation checklist
     - As you complete each checklist item, update the plan file to mark it as checked (`- [x]`)
+        - Mark items as complete IMMEDIATELY after finishing each item
+        - Do not batch multiple completions together
+        - Update the plan file before moving to the next checklist item
     - Add any relevant observations or decisions to the "Notes for Next Phase" section in the plan
     - **IMPORTANT**: Be autonomous. Do NOT ask for human input unless absolutely necessary. If you encounter an issue, attempt to resolve it yourself first. Only block if you:
         - Cannot fix failing tests after multiple attempts
