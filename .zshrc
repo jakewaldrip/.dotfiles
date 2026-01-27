@@ -57,3 +57,10 @@ else
   source $package_path/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
   source $package_path/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
+
+# bun completions
+[ -s "/Users/jacob.waldrip/.bun/_bun" ] && source "/Users/jacob.waldrip/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

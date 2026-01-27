@@ -2,6 +2,7 @@
 description: >-
     Use this agent to interact with linear and query/update tickets
 mode: primary
+model: google-vertex-anthropic/claude-sonnet-4-5@20250929
 permission:
   edit: ask
   bash:

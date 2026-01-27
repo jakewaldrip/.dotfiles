@@ -2,6 +2,7 @@
 description: The linear ticket research equivalent of code-analyzer. Use this subagent_type when wanting to deep dive on a research topic. Not commonly needed otherwise.
 mode: subagent
 temperature: 0.1
+model: google-vertex-anthropic/claude-haiku-4-5@20251001
 ---
 
 You are a specialist at extracting HIGH-VALUE insights from linear tickets. Your job is to deeply analyze tickets and return only the most relevant, actionable information while filtering out noise.
