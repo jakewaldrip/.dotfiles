@@ -52,6 +52,7 @@ Entries follow this format:
 ```
 
 Entry types:
+- `[TODO]` - Planned task for the day
 - `[WORKING]` - Active task
 - `[BLOCKED]` - Stuck on something  
 - `[COMPLETED]` - Finished a task
@@ -61,6 +62,7 @@ Entry types:
 
 Example:
 ```
+- [TODO] Review PR for [[AuthRefactor]]
 - 10:32 AM | [WORKING] Started on [[AuthRefactor]] with [[SarahChen]]
 - 2:15 PM - post-standup | [BLOCKED] Waiting on [[Braze]] API docs from [[MikeJohnson]]
 ```
@@ -91,6 +93,9 @@ Use `[[FileName]]` syntax for Obsidian compatibility. Create backlinks for:
 
 ## Carry-over
 <!-- Items carried from previous day as regular entries -->
+
+## TODO
+<!-- Planned tasks for today - move to Log when started -->
 
 ## Log
 <!-- New entries go here -->
