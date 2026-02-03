@@ -14,6 +14,7 @@ All notes live in `/Users/jacob.waldrip/development/chronos/` with this structur
 ```
 chronos/
 ├── daily/           # Daily log files (YYYY-MM-DD.md)
+├── archive/         # Monthly archives with summaries
 ├── projects/        # Project files
 ├── people/          # Collaborator files
 ├── vendors/         # Vendor/tool files (external services, not languages)
@@ -38,11 +39,14 @@ The user's natural language IS the instruction. Act on it immediately.
 
 ### 1. Daily File Management
 
-On first interaction of the day:
-1. Check if today's file exists at `daily/YYYY-MM-DD.md`
-2. If not, create it with the daily template
-3. Review previous day's incomplete items
-4. Ask user which carry-over items to include in today's file
+Daily file creation is handled by the `/start-day` command. This command:
+1. Checks if today's file exists at `daily/YYYY-MM-DD.md`
+2. If not, creates it with the daily template
+3. Finds the most recent daily file and reviews incomplete items
+4. Asks user which carry-over items to include
+5. Provides project status and archive awareness context
+
+The command can also be triggered via natural language ("start my day", "begin my day", etc.).
 
 ### 2. Entry Format
 
@@ -159,6 +163,26 @@ Active | Paused | Completed
 <!-- Relevant context -->
 ```
 
+### 5. Archive Awareness
+
+Historical daily logs are stored in `archive/` organized by month:
+```
+archive/
+├── 2026_january/
+│   ├── summary.md      # Month overview with key stats
+│   ├── 2026-01-02.md
+│   ├── 2026-01-03.md
+│   └── ...
+└── 2026_february/
+    └── ...
+```
+
+When answering queries about past work:
+1. Check the current `daily/` folder first
+2. If the query references older timeframes, search relevant `archive/` month folders
+3. **Proactively mention** relevant historical context from archives when it's pertinent to current work (e.g., "I see you worked on [[BrazeMigration]] back in January - here's what you noted then...")
+4. Use `summary.md` files for quick month-level context before diving into individual daily files
+
 ## Query Capabilities
 
 The user may ask questions like:
@@ -183,29 +207,17 @@ When querying:
 
 ## Quick Commands
 
-### "Start my day"
+### /start-day
 
-When the user says "start my day" (or similar):
+Creates today's daily log and handles carry-over from previous work sessions. See the `/start-day` command for full details.
 
-1. Check if today's daily file exists at `daily/YYYY-MM-DD.md`
-2. If not, create it with the daily template
-3. Read the previous day's file and identify any incomplete work:
-   - Look for `[WORKING]` or `[BLOCKED]` entries without corresponding `[COMPLETED]` entries
-   - These are potential carry-over items
-4. Present the carry-over items to the user and ask which to include
-5. Add selected items to today's Carry-over section as regular entries
-6. Confirm the day is ready for logging
+Can also be triggered via natural language:
+- "start my day"
+- "begin my day"
+- "good morning"
+- "let's get started"
 
-Example output:
-```
-Good morning! I've created today's log (2026-01-29.md).
-
-From yesterday, I found these incomplete items:
-1. [WORKING] Auth refactor with [[SarahChen]]
-2. [BLOCKED] Waiting on [[Braze]] API docs
-
-Which would you like to carry over? (all / none / numbers)
-```
+When triggered via natural language, execute the `/start-day` command behavior.
 
 ## Example Interactions
 
