@@ -10,11 +10,6 @@
     "linear-mcp": {
       "type": "local",
       "command": ["npx", "-y", "mcp-remote", "https://mcp.linear.app/sse"],
-    },
-    "graphite": {
-      "type": "local",
-      "command": ["gt", "mcp"],
-      "enabled": true
     }
   }
 }

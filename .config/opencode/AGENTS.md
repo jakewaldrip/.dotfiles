@@ -20,19 +20,14 @@
   - Task involves database changes? → Load `database-migration` skill FIRST
   - Task involves React components? → Load `react-component-writing` skill FIRST
   - Task involves feature flags? → Load `feature-flag-create-or-remove` skill FIRST
+  - Task involves git/branches/PRs? → Load `graphite-cli` skill FIRST
   - Anything else that you deem potentially relevant
 
-## MCP
+## Graphite CLI
 
-### Graphite
-
-- You have access to the graphite-mcp, use this to interact with `git` when possible
-    - If unsure about gt command syntax, use the `graphite_learn_gt` tool first
-    - branch_name is positional, not a flag
-    - Common patterns:
-      - `gt create <branch-name> --all --message "commit message"` (branch name is FIRST, before flags)
-      - `gt submit --stack` (to push entire stack)
-      - `gt modify --all` (to amend current commit)
+- Use Graphite CLI (`gt`) for all git branch and PR operations
+- Load the `graphite-cli` skill for complete command reference and examples
+- Run `gt` commands via the Bash tool (not via MCP)
 
 ## Handling Pre-existing CI/Test Failures
 
