@@ -78,10 +78,9 @@ $ARGUMENTS
     - If verification fails and you cannot fix it, mark the phase as "Blocked" in the PRD, add a note explaining why in the plan, and output `[LOOP_SIGNAL:PHASE_BLOCKED]`
 
 10. Create a commit for this phase's work:
-    - Stage all relevant changes with `git add`
-    - Use the `graphite_run_gt_cmd` tool with `gt create` to create a branch and commit
+    - Use the Bash tool to run `gt create` to create a branch and commit
     - Branch naming convention: `phase-X-short-description` (e.g., `phase-1-label-description-migration`)
-        - Use the `--branch` flag to specify the branch name: `gt create --all --branch "phase-1-label-description-migration" --message "feat: Phase 1 - Add label_description table migration"`
+        - Use the `--all` and `--branch` flags to stage and name the branch: `gt create --all --branch "phase-1-label-description-migration" --message "feat: Phase 1 - Add label_description table migration"`
     - The commit message should reference the phase number and a brief description
     - Do NOT push or submit the changes (no `gt submit`)
 
@@ -107,7 +106,7 @@ If at any point you determine you cannot continue, you MUST:
     - Change the phase status to "Blocked"
 
 3. Commit any partial work (if meaningful):
-    - Use the `graphite_run_gt_cmd` tool with `gt create` with a message like "wip: Phase X - partial progress (blocked)"
+    - Use the Bash tool to run `gt create --all --message "wip: Phase X - partial progress (blocked)"`
 
 4. Output `[LOOP_SIGNAL:PHASE_BLOCKED]`
 

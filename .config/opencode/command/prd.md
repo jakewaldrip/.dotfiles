@@ -106,7 +106,7 @@ $ARGUMENTS
     f. WAIT until these have ALL completed
 
 5. Now that we understand the code and what the user wants to accomplish, we need to break the task down into individual steps
-    - It is absolutely critical that these steps are indepedently accomplishable. It is okay if they rely on happening in order, but we want each phase to be its own pull request
+    - It is absolutely critical that these steps are independently accomplishable. It is okay if they rely on happening in order, but we want each phase to be its own pull request
     - You can decide how many phases are needed, it is possible that the feature is small enough where it can be done in one pull request, or it might need 10 separate phases to complete. It is important here that we be precise and realistic in the amount of work that an agent can accomplish in a single session
     - Each phase will be discrete and accomplished by one agent in one session, and that work will be committed. Keep that in mind when creating your phases
 
@@ -115,9 +115,9 @@ $ARGUMENTS
         - The users request
         - An understanding of the current state of the code surrounding this request
         - The discrete phases that you want the task to be accomplished within
-    - Use this information to create a **SEPERATE** plan file for EACH phase
+    - Use this information to create a **SEPARATE** plan file for EACH phase
     - **IMPORTANT** Follow the "Template for Plan Files" defined above when creating each plan
-        - The plan will be a high level approach for tackling this task. Be specific and perscriptive in how this task gets handled. You have the context, they do not yet
+        - The plan will be a high level approach for tackling this task. Be specific and prescriptive in how this task gets handled. You have the context, they do not yet
             - For example, if phase 1 is create a database table, give it the exact shape of the database table it should create, tell it what methods the model should have, etc
         - Give details on patterns they should follow for various functionality, and important files to keep in mind for working on this functionality
             - Provide file names and line numbers if possible when doing this
