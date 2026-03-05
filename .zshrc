@@ -11,7 +11,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
   export powerlevel_path="$(brew --prefix)/share"
   export opencode_path="$HOME/.opencode/bin"
 else
-  package_path="/usr/"
+  package_path="/usr/share"
   powerlevel_path="$HOME"
   opencode_path="/home/jacob/.opencode/bin"
 fi
