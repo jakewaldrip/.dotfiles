@@ -38,3 +38,7 @@ When running validation commands (typecheck, tests, build), if failures occur:
 2. If failing files are NOT in your changeset, note them as pre-existing issues and proceed
 3. Do NOT spend time investigating or fixing unrelated failures unless explicitly asked
 4. Document pre-existing failures in commit messages or plan notes for visibility
+
+## Grepping and Searching
+- AWLAYS try to use the `grep` tool first
+    - If you must search from bash, ALWAYS choose `rg` (ripgrep) over `grep`

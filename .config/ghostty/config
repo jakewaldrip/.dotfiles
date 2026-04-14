@@ -1,5 +1,7 @@
 # Dynamic theme colors
-config-file = ?"~/.config/omarchy/current/theme/ghostty.conf"
+# config-file = ?"~/.config/omarchy/current/theme/ghostty.conf"
+
+theme = Everforest Dark Hard
 
 # Font
 font-family = "0xProto Nerd Font Mono"
