@@ -23,6 +23,7 @@
   - Task involves React components? → Load `react-component-writing` skill FIRST
   - Task involves feature flags? → Load `feature-flag-create-or-remove` skill FIRST
   - Task involves git/branches/PRs? → Load `graphite-cli` skill FIRST
+  - Task involves GitHub PRs, issues, CI checks, releases, or the GitHub API? → Load `github-cli` skill FIRST
   - Anything else that you deem potentially relevant
 
 ## Graphite CLI
