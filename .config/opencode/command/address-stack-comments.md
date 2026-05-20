@@ -1,0 +1,254 @@
+---
+description: Traverse a Graphite stack bottom-to-top, collect unresolved PR review comments across all branches, let the user pick which to address, then fix and commit per branch
+---
+
+You are an expert software engineer tasked with addressing inline review comments across an entire Graphite stack of pull requests. You will traverse the stack, collect all unresolved comments, present them for selection, then fix and commit branch-by-branch from bottom to top.
+
+## Phase 1: Discover the Stack
+
+### Step 1a: Map the stack
+
+Run `gt ls --stack` to identify all branches in the current stack. Parse the output to build an ordered list of branch names from bottom (closest to trunk) to top.
+
+If `gt ls --stack` output is ambiguous, supplement with `gt log --stack` to clarify the ordering and parent-child relationships.
+
+### Step 1b: Navigate to the bottom
+
+```bash
+gt bottom
+```
+
+Record the current branch name — this is the bottom of the stack.
+
+### Step 1c: Build the branch list
+
+Starting from the bottom, traverse upward with `gt up` to confirm the ordered list of branches. At each branch, record the branch name. When `gt up` fails (you've reached the top), the traversal is complete.
+
+After mapping, navigate back to the bottom:
+
+```bash
+gt bottom
+```
+
+## Phase 2: Collect All Unresolved Comments Across the Stack
+
+### Step 2a: Load the github-cli skill
+
+Load the `github-cli` skill for reference on `gh` command usage.
+
+### Step 2b: For each branch, detect its PR and fetch comments
+
+For each branch in the ordered list (bottom to top):
+
+1. Check out the branch:
+
+```bash
+gt checkout BRANCH_NAME
+```
+
+2. Detect the PR number for this branch:
+
+```bash
+gh pr view --json number,url --jq '{number,url}'
+```
+
+If no PR exists for this branch, note it and skip to the next branch.
+
+3. Fetch unresolved inline review threads using the GitHub GraphQL API:
+
+```bash
+gh api graphql --paginate -F owner='{owner}' -F name='{repo}' -F pr=PR_NUMBER -f query='
+  query($owner: String!, $name: String!, $pr: Int!, $endCursor: String) {
+    repository(owner: $owner, name: $name) {
+      pullRequest(number: $pr) {
+        reviewThreads(first: 100, after: $endCursor) {
+          pageInfo { hasNextPage endCursor }
+          nodes {
+            isResolved
+            isOutdated
+            path
+            line
+            comments(first: 50) {
+              nodes {
+                id
+                body
+                author { login }
+                createdAt
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+'
+```
+
+Replace `PR_NUMBER` with the actual PR number.
+
+4. Filter to threads where `isResolved` is `false`.
+
+5. For each unresolved thread, collect:
+   - The branch name
+   - The PR number
+   - The file path (`path`)
+   - The line number (`line`)
+   - The full thread of comments (all `comments.nodes`), preserving order
+   - The author of the initial comment (`comments.nodes[0].author.login`)
+
+### Step 2c: Categorize by source within each branch
+
+For each branch, group its unresolved threads into:
+- **BugBot (cursor[bot])**: Threads where the initial comment author is `cursor[bot]`
+- **Human reviewers**: All other threads
+
+### Step 2d: Handle empty stacks
+
+If there are zero unresolved comments across the entire stack, inform the user and stop.
+
+## Phase 3: Present Summary & Let User Pick
+
+Present all comments grouped by branch in a clear, organized format:
+
+```
+## Unresolved PR Comments Across Stack
+
+### Branch: feature-base (PR #101) — X comments
+
+#### BugBot (cursor[bot])
+1. **file.ts:42** — "Brief summary of the comment..."
+2. **other-file.ts:108** — "Brief summary..."
+
+#### Human Reviewers
+3. **file.ts:15** (reviewer-name) — "Brief summary..."
+
+---
+
+### Branch: feature-part-2 (PR #102) — Y comments
+
+#### BugBot (cursor[bot])
+4. **api.ts:23** — "Brief summary..."
+
+#### Human Reviewers
+5. **api.ts:90** (another-reviewer) — "Brief summary..."
+
+---
+
+### Branch: feature-part-3 (PR #103) — No unresolved comments
+```
+
+For each comment, show:
+- A global number (for selection, sequential across the entire stack)
+- File path and line number
+- Author (for human comments)
+- The comment body (truncated to ~100 chars if longer)
+
+For branches with no unresolved comments, show a brief note like "No unresolved comments".
+
+Then use the `question` tool with `multiple: true` to let the user select which comments to address. Include an option for "All comments" as the first choice.
+
+If the user selects "All comments", address every listed comment. Otherwise, address only the selected ones.
+
+## Phase 4: Fix & Commit Per Branch
+
+Use the `todowrite` tool to create a todo item for each branch that has selected comments.
+
+Navigate to the bottom of the stack:
+
+```bash
+gt bottom
+```
+
+Then, for each branch from bottom to top:
+
+### Step 4a: Check out the branch
+
+```bash
+gt checkout BRANCH_NAME
+```
+
+### Step 4b: Check for selected comments on this branch
+
+If no selected comments target this branch, output a brief note:
+
+```
+No selected comments on `BRANCH_NAME`, moving up...
+```
+
+Then skip to the next branch.
+
+### Step 4c: Fix selected comments
+
+For each selected comment on this branch, in order:
+
+1. Mark its todo as `in_progress`
+2. Read the full thread context (all replies in the thread) to understand:
+   - What the reviewer is asking for
+   - Any follow-up clarifications or discussion
+   - The specific code change requested
+3. Read the referenced file to understand the surrounding code
+4. If more context is needed (e.g., understanding a type, finding a related function), use the `grep` or `read` tools to gather it
+5. Implement the fix using the `Edit` tool
+6. Mark the todo as `completed`
+
+### Step 4d: Commit the fixes
+
+After all selected comments on this branch have been fixed, commit using Graphite:
+
+```bash
+gt modify --all -m "fix: address PR review comments"
+```
+
+This amends the branch's commit and automatically restacks descendants.
+
+### Step 4e: Move up the stack
+
+```bash
+gt up
+```
+
+If `gt up` fails, you've reached the top — the traversal is complete.
+
+### Important Fix Guidelines
+
+- **Be precise** — make minimal, targeted changes that directly address the comment
+- **Preserve style** — match the existing code style and conventions in the file
+- If a comment is ambiguous or you cannot determine what change to make, note it in your output and skip it rather than making a wrong change
+- If fixing one comment would conflict with another selected comment on the same branch, note the conflict
+- **Do NOT push** to the remote — only commit locally
+
+## Phase 5: Summary
+
+After all branches have been processed, provide a full summary:
+
+```
+## Stack Comment Fixes — Summary
+
+### Branch: feature-base (PR #101)
+#### Changes Made
+1. **file.ts:42** — [Brief description of what was changed]
+2. **other-file.ts:108** — [Brief description of what was changed]
+
+#### Skipped (if any)
+- **file.ts:15** — [Reason it was skipped]
+
+Committed: `fix: address PR review comments`
+
+---
+
+### Branch: feature-part-2 (PR #102)
+#### Changes Made
+3. **api.ts:23** — [Brief description of what was changed]
+
+Committed: `fix: address PR review comments`
+
+---
+
+### Branch: feature-part-3 (PR #103)
+No comments selected — skipped.
+
+---
+
+All changes have been committed locally per branch. Run `gt submit --stack` to push when ready.
+```
