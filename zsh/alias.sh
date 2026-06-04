@@ -10,13 +10,25 @@ fi
 
 # Custom Function Aliases
 deploylog() {
-	git log --graph --pretty=format:'%h %s <%an>' --abbrev-commit $1 | pbcopy
+  str=$(git log --graph --pretty=format:'%h %s <%an>' --abbrev-commit $1)
+  echo "$str"
+  printf '%s' "$str" | pbcopy
 }
 
 githash() {
-	git rev-parse HEAD | pbcopy
+  str=$(git rev-parse HEAD)
+  echo "$str"
+  printf '%s' "$str" | pbcopy
 }
 
 branch_name() {
-	git rev-parse --abbrev-ref HEAD | pbcopy
+  str=$(git rev-parse --abbrev-ref HEAD)
+  echo "$str"
+  printf '%s' "$str" | pbcopy
+}
+
+uuid() {
+  id=$(uuidgen | tr '[:upper:]' '[:lower:]')
+  echo "$id"
+  printf '%s' "$id" | pbcopy
 }
