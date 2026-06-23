@@ -2,7 +2,7 @@
 
 ## NPM Scripts
 
-- Use `npm run migrate:make {migration-name}` to create a new migration file
+- Use `pnpm run migrate:make {migration_name}` to create a new migration file (scaffold only; no DB connection required)
 - Use `npm run migrate` to run pending migrations
 - Use `npm run migrate:rollback` to rollback the last migration
 - Use `npm run migrate:examples` to run example migrations (for testing templates)
@@ -110,7 +110,7 @@ await knex.raw(formatAlterTableEnumSql('table_name', 'column_name', ['value1', '
 
 ## Migration Process
 
-1. Run `npm run migrate:make {migration-name}` to generate the migration file
+1. Run `pnpm run migrate:make {migration_name}` to generate the migration file (scaffold only; no DB connection required)
 2. Copy content from appropriate template in `examples/` folder
 3. Modify table names, column names, and values
 4. Implement both `up` and `down` functions

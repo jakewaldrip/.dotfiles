@@ -10,6 +10,7 @@ description: React component patterns and style guide for the Commons monorepo. 
 - **Named exports only**: `export const MyComponent = ...` (no default exports)
 - **Plain arrow functions**: Don't type with `React.FC`
 - **No spread props in GraphQL wrappers**: List all props individually for type safety
+- **Boolean naming**: booleans must start with `is/are/should/has/have/can/did/will/does/was/were` (enforced by `@typescript-eslint/naming-convention`). e.g. `isReasonAllowed`, not `allowsReason`
 
 ```tsx
 interface MyComponentProps {
@@ -103,8 +104,19 @@ import { Text, useFormatMessage } from '@commons/frontend/shared/commonplace';
 const Component = ({ pageNumber }: { pageNumber: number }) => {
   const formatMessage = useFormatMessage();
   const nextText = formatMessage({ id: 'shared.next' });
-  return <Text text={`${nextText}: ${pageNumber}`} />;
-};
+   return <Text text={`${nextText}: ${pageNumber}`} />;
+ };
+```
+
+### Dynamic message ids
+
+Template-literal message ids are not in the typed `MessageKey` union, so they fail
+`tsc` unless cast. Cast them with `as MessageFormat`:
+
+```tsx
+formatMessage({ id: `opportunities.supplementalReason.${reason}` } as MessageFormat)
+// or for content props:
+optionLabelContent: { id: `${prefix}.${value}` } as MessageFormat,
 ```
 
 ## Testing

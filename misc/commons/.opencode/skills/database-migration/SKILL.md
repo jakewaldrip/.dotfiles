@@ -9,6 +9,10 @@ description: Create database migrations from templates in the Commons monorepo. 
 
 Schema changes only: adding/removing/modifying columns, tables, indexes, or feature flags.
 
+> **Do NOT edit `commons-packages/backend/schema.sql`.** It is a generated artifact.
+> Express every schema change as a migration only. If `schema.sql` shows up in
+> `git status`, revert it (`git checkout -- commons-packages/backend/schema.sql`).
+
 ## When NOT to Use
 
 **Patient data operations** (backfilling, updating, transforming data) → Use `commons-packages/backend/jobs/` instead.
@@ -16,10 +20,14 @@ Schema changes only: adding/removing/modifying columns, tables, indexes, or feat
 ## Create a Migration
 
 ```bash
-npm run migrate:make <name-of-migration>
+pnpm run migrate:make {migration_name}
 ```
 
 Creates file in `commons-packages/backend/models/migrations/YYYYMMDDHHMMSS_name-of-migration.ts`
+
+> This generates a timestamped scaffold file only — it does **not** require a
+> database connection. Always use it; never hand-write a migration file or invent
+> its timestamp.
 
 ## Common Patterns
 
