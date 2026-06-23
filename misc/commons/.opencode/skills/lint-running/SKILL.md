@@ -1,9 +1,15 @@
 ---
 name: lint-running
-description: Run lint and format checks in the Commons monorepo. Use when validating code style, checking for linting errors, before commits, or when the user mentions linting or formatting code.
+description: Advanced lint/format modes in the Commons monorepo — git-affected linting across a stack, auto-fix, and the full-CI lint pipeline. For routine "lint this file's project" resolution, call the nx-project-for-file tool instead.
 ---
 
-# Run Lint and Format Checks
+# Advanced Lint and Format Modes
+
+> **Project + command resolution:** Call the `nx-project-for-file` tool with the file
+> path. It returns the owning project and the exact
+> `npx nx run-many --targets "lint:check,format:check" -p <project>` command for the
+> single-file/single-project case. This skill covers only the modes the tool does
+> **not** emit.
 
 ## Targets
 
@@ -14,38 +20,22 @@ description: Run lint and format checks in the Commons monorepo. Use when valida
 | `lint:fix` | ESLint auto-fix |
 | `format:write` | Prettier auto-fix |
 
-## Two Modes
-
-### 1. Context-based (specific files)
-
-When files are provided, lint their projects:
-
-1. Use @nx-project-mapping to determine the Nx project for each file
-2. Collect unique project names
-3. Run lint on those projects:
+## Auto-fix (specific projects)
 
 ```bash
-npx nx run-many --targets "lint:check,format:check" -p <project1>,<project2>
+npx nx run-many --targets "lint:fix,format:write" -p <project1>,<project2>
 ```
 
-**To auto-fix:**
-```bash
-npx nx run-many --targets "lint:fix,format:write" -p <project>
-```
+## Git-based (changed files across a stack)
 
-### 2. Git-based (changed files)
-
-When no files specified, lint affected projects:
+When no specific files are given, lint affected projects using Graphite's parent as
+the base (correct for stacked PRs):
 
 ```bash
 npx nx affected --base=$(gt parent) --targets "lint:check,format:check"
 ```
 
-Uses Graphite's `gt parent` for correct base (works with stacked PRs).
-
-## Full CI Lint Pipeline
-
-To run lint on the entire codebase:
+## Full CI lint pipeline (entire codebase)
 
 ```bash
 # Step 1: Generate builder slugs (required)
@@ -55,20 +45,10 @@ npx nx codegen @cityblock/builder
 npx nx run-many --targets "lint:check,format:check"
 ```
 
-## Examples
-
-| File Path | Project | Command |
-|-----------|---------|---------|
-| `commons-packages/backend/services/member.ts` | `@commons/backend` | `npx nx run-many --targets "lint:check,format:check" -p @commons/backend` |
-| `commons/app/shared/components/button.tsx` | `commons` | `npx nx run-many --targets "lint:check,format:check" -p commons` |
-| Multiple projects | `a,b,c` | `npx nx run-many --targets "lint:check,format:check" -p @commons/backend,commons` |
-
-**Note:** For packages, read the `name` field from `package.json`—directory names don't always match project names.
-
 ## Troubleshooting
 
 | Issue | Solution |
 |-------|----------|
 | EPERM errors | Run with sandbox disabled |
-| Project not found | Use @nx-project-mapping; for packages, check `package.json` name field |
+| Project not found | Call the `nx-project-for-file` tool to resolve the correct project name |
 | Long execution | Normal for large monorepos (10+ minutes) |
