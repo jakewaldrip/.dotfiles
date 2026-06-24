@@ -54,6 +54,7 @@ The exported transcript is **Markdown** (not raw JSON). Parse it with these conv
    - `plugins/` (existing plugins, if any).
    - `tools/` (existing custom tools, if any).
    - Note any **skill referenced in `AGENTS.md` that does not actually exist** — that is a concrete gap.
+   - **Ignore `.cursor/` and `.claude/` directories and any skills within them.** These are ignored at the opencode level, so never read them for context or propose interventions that live in them.
 
 4. **Analyze for friction.** Classify findings into four buckets. For each finding, capture transcript **evidence** (quote the prose, tool call, or line reference):
    - **Steering events** — user corrections; "no / actually / instead / not quite"; re-prompts; reversed directions; repeated clarifications.
