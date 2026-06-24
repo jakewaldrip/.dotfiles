@@ -49,6 +49,7 @@ export PATH="/usr/local/sbin:$PATH"
 
 # opencode
 export PATH=$opencode_path:$PATH
+export OPENCODE_DISABLE_EXTERNAL_SKILLS=1
 
 if [[ "$(uname)" == "Darwin" ]]; then
   source $package_path/share/zsh-autosuggestions/zsh-autosuggestions.zsh
