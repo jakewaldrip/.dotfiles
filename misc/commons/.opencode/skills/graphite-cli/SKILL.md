@@ -37,6 +37,20 @@ gt create my-feature --all --message "feat: add feature"
 gt create --branch my-feature --all --message "feat: add feature"
 ```
 
+**The force-rename trap (renaming a branch that already has a PR):**
+
+`gt rename <new> --force` on a branch with an open PR **detaches the Graphite↔PR
+association**. The next `gt submit` creates a *brand-new* PR for the renamed branch; the
+original PR is left orphaned on the old branch name. There is no "repurpose the existing
+PR under a new branch name" path — GitHub PR head refs + Graphite tracking do not survive
+the force.
+
+- If the goal is to **reuse an existing PR as a stack's bottom**, do NOT rename. Keep the
+  original branch name as the bottom branch and split the *upper* work off it, so the
+  original PR stays attached.
+- If a rename is unavoidable, set expectations up front that the old PR will be
+  closed/superseded by a fresh one.
+
 ## Core Workflow
 
 ### 1. Create a Branch with Changes
@@ -123,7 +137,7 @@ gt sync
 | Command | Description | Key Flags |
 | ------- | ----------- | --------- |
 | `gt delete [name]` | Delete branch and metadata | `-f/--force` |
-| `gt rename [name]` | Rename branch | `-f/--force` |
+| `gt rename [name]` | Rename branch (⚠ `--force` on a branch with an open PR **detaches** the PR; the next `gt submit` creates a NEW PR — see "The force-rename trap") | `-f/--force` |
 | `gt track [branch]` | Start tracking branch with Graphite | `-p/--parent`, `-f/--force` |
 | `gt untrack [branch]` | Stop tracking branch | `-f/--force` |
 | `gt get [branch]` | Sync branch/PR from remote | `-d/--downstack`, `-f/--force` |
@@ -196,6 +210,7 @@ gt submit --no-verify
 
 ## See Also
 
+- [SPLITTING.md](./SPLITTING.md) - Split one multi-file commit into a file-grouped stack (read before splitting a branch)
 - [EXAMPLES.md](./EXAMPLES.md) - Detailed workflow examples
 - `gt docs` - Official documentation
 - `gt demo` - Interactive demos
