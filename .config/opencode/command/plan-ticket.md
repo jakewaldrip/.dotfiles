@@ -46,7 +46,24 @@ Now ground yourself in the current state of the code. Spawn agents **in parallel
 
 Synthesize the findings into a clear picture of how the relevant area currently works.
 
-### 4. Grill the User on Scope and Approach
+### 4. Load Relevant Skills
+
+Now that you understand both the ticket and the shape of the code it touches, identify which skills apply to the work ahead and load them **before** you plan, so your questions and plan are informed by the proper workflows.
+
+- Review the ticket's intent and your research findings against the skills available to you.
+- Load **every** skill that could plausibly apply to the implementation, for example:
+  - Touches tests? → load the `test-running` skill.
+  - Touches the database / migrations? → load the `database-migration` skill.
+  - Touches React components? → load the `react-component-writing` skill.
+  - Touches feature flags? → load the `feature-flag-create-or-remove` skill.
+  - Touches git, branches, or PRs? → load the `graphite-cli` skill.
+  - Touches GitHub PRs, issues, CI, releases, or the GitHub API? → load the `github-cli` skill.
+  - A data-integrity investigation? → load the `data-integrity-investigation` skill.
+  - Anything else you deem relevant.
+- When in doubt, load the skill — the cost of loading an unneeded skill is far lower than planning without its guidance.
+- Fold any constraints or conventions the loaded skills impose into the questions you ask (Step 5) and the plan you produce (Step 6).
+
+### 5. Grill the User on Scope and Approach
 
 This is the most important step. Do NOT skip it and do NOT plan before completing it.
 
@@ -63,9 +80,9 @@ Then grill them. Use the `question` tool to ask pointed, decision-forcing questi
 - **Approach tradeoffs**: Where multiple viable approaches exist, lay them out as choices with their tradeoffs and recommend one.
 - **Unknowns**: Anything ambiguous in the ticket that needs the user's decision.
 
-**WAIT** for the user's answers before proceeding. Iterate if their answers open new questions. Do not move to Step 5 until scope and approach are locked.
+**WAIT** for the user's answers before proceeding. Iterate if their answers open new questions. Do not move to Step 6 until scope and approach are locked.
 
-### 5. Produce the Plan
+### 6. Produce the Plan
 
 Once scope and approach are confirmed, present a structured, checklist-style plan **inline** (do not write a file). Use this structure:
 
@@ -103,6 +120,6 @@ Keep the plan precise and prescriptive — you have the context now, the impleme
 ## Important Notes
 
 - This command is **READ-ONLY**. Propose the plan; do not implement it.
-- Always research (Steps 2–3) BEFORE grilling the user (Step 4).
+- Always research (Steps 2–3) and load relevant skills (Step 4) BEFORE grilling the user (Step 5).
 - Run agents of the same type in parallel within a step, and wait for them to finish before the next step.
 - The plan is presented inline — do not write it to a file.
