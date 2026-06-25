@@ -63,3 +63,30 @@ npx nx test:jest:run @commons/backend -- --runTestsByPath __tests__/my.spec.ts -
 | EPERM errors | Run with sandbox disabled (permission issues with npm/node modules) |
 | Test not found | Verify path is relative to **project root**, not repo root (the tool returns the correct relative path) |
 | `/local/` tests not running | Use `test-local:jest:run` target instead of `test:jest:run` |
+| `The migration directory is corrupt, the following files are missing: ...` | Stale shared test DB — `commons_test` holds migrations from another branch you previously checked out. This is an **environment** issue, NOT a code defect; do not investigate your changeset. Reset the DB (see below). |
+
+## Resetting a stale/corrupt test DB
+
+Jest uses a shared `commons_test` Postgres DB (host `127.0.0.1`, port `5432`, user `root`,
+password `pwd`). Switching branches can leave it with migration records for files absent from
+your tree, so `knex.migrate.latest()` fails in `beforeAll` with `migration directory is
+corrupt`. This is shared-state drift, not your code.
+
+Prefer the **`reset-test-db` tool** if available — it performs the steps below in the correct
+order. Otherwise run, from `commons-packages/backend`:
+
+```bash
+# 1. Recreate an EMPTY database. initialize-test-db.ts connects to commons_test directly and
+#    fails if it does not already exist, so you must CREATE it empty before repopulating.
+PGPASSWORD=pwd psql -h 127.0.0.1 -U root -d postgres -c "DROP DATABASE IF EXISTS commons_test;"
+PGPASSWORD=pwd psql -h 127.0.0.1 -U root -d postgres -c "CREATE DATABASE commons_test;"
+# 2. Populate schema from schema.sql + run migrations to latest. First run is slow (1-3 min);
+#    let it finish — do not abort it, or the DB is left half-initialized.
+NODE_ENV=test npx tsx ./src/__tests__/helpers/initialize-test-db.ts
+```
+
+To confirm a foreign-branch migration is the culprit before resetting:
+
+```bash
+git log --all --oneline -- "**/<missing-migration-file>"
+```
