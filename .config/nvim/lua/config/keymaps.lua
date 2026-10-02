@@ -42,8 +42,7 @@ vim.keymap.set('n', '<leader>bP', 'ggvG$"+p', { desc = '[B]uffer [P]aste' })
 
 -- Invoke Editor AI integration
 local function invoke_ai(command_name)
-  ---@diagnostic disable-next-line: undefined-field
-  local cwd = vim.loop.cwd();
+  local cwd = vim.uv.cwd();
   local filepath = vim.fn.expand("%:.")
 
   local cursor_pos = vim.api.nvim_win_get_cursor(0)

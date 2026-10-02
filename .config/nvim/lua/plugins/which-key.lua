@@ -19,7 +19,6 @@ return {
       { '<leader>g',        group = '[G]it' },
       { '<leader>b',        group = '[B]uffer' },
       { '<leader><leader>', hidden = true },
-      { '<leader>m',        group = '[M]acros' },
       { '<leader>r',        group = '[R]ename' },
       { '<leader>s',        group = '[S]earch' },
       { '<leader>t',        group = '[T]oggle' },

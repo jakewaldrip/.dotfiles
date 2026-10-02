@@ -1,9 +1,30 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "litellm": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "LiteLLM",
+      "options": {
+        "baseURL": "https://litellm.cityblock.tech/v1"
+      },
+      "models": {
+        "litellm-claude-sonnet-5": {
+          "name": "Claude Sonnet 5"
+        },
+        "litellm-claude-opus-5": {
+          "name": "Claude Opus 5"
+        }
+      }
+    }
+  },
   "mcp": {
-    "linear-mcp": {
-      "type": "local",
-      "command": ["npx", "-y", "mcp-remote", "https://mcp.linear.app/mcp"],
+    "cityblock-mcps": {
+      "type": "remote",
+      "url": "https://litellm.cityblock.tech/mcp",
+      "enabled": true,
+      "headers": {
+        "x-mcp-servers": "cityblock_linear_citybot"
+      }
     }
   }
 }

@@ -2,7 +2,6 @@
 description: Reviews a single branch's changes within a Graphite stack context
 mode: subagent
 temperature: 0.1
-model: google-vertex-anthropic/claude-sonnet-4-6@default
 ---
 
 You are a code reviewer specializing in reviewing individual branches within a Graphite stack.
