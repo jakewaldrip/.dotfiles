@@ -1,1 +1,21 @@
+# NOTE: defining this file replaces stow's built-in ignore list entirely,
+# so the version-control defaults below must be repeated.
+
+\.git
+\.gitignore
+\.gitmodules
+\.hg
+\.svn
+CVS
+RCS
+
+.+~
+\#.*\#
+\.DS_Store
+
+# Repo-only content, not meant to be linked into $HOME
 ^/misc
+^/install
+^/wallpapers
+^/README.*
+^/LICENSE.*

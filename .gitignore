@@ -2,3 +2,8 @@ this-env.sh
 .DS_Store
 zsh/scripts/deploy-companion
 zsh/scripts/copy-dev-db
+
+# Machine-local git identity, created by install.sh
+.gitconfig.local
+
+node_modules/

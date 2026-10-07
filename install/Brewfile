@@ -1,0 +1,46 @@
+tap "withgraphite/tap"
+tap "oven-sh/bun"
+tap "xo/xo"
+
+# Shell
+brew "stow"
+brew "starship"
+brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
+brew "fzf"
+
+# Core CLI
+brew "ripgrep"
+brew "fd"
+brew "jq"
+brew "difftastic"
+brew "bottom"
+brew "cloc"
+brew "inlyne"
+brew "xo/xo/usql"
+
+# Git / VCS
+brew "gh"
+brew "withgraphite/tap/graphite"
+brew "pre-commit"
+
+# Editor + LSP
+brew "neovim"
+brew "lua-language-server"
+brew "typescript-language-server"
+brew "code-minimap"
+
+# Languages / runtimes
+brew "node"
+brew "pnpm"
+brew "oven-sh/bun/bun"
+brew "python@3.13"
+
+# Infra
+brew "tenv"
+brew "tflint"
+
+# Casks
+cask "ghostty"
+cask "font-0xproto-nerd-font"
+cask "keycastr"

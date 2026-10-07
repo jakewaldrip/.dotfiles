@@ -1,185 +1,396 @@
+#!/usr/bin/env bash
+set -uo pipefail
 
-# Only setup for mac at the moment
-if ! [ "$(uname)" == "Darwin" ]; then
-  echo "Only mac install is supported via script."
-  exit
-fi
+DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
+BREWFILE="$DOTFILES/install/Brewfile"
 
-echo "===================="
-echo "Running .dotfile installation script"
+INSTALLED=()
+SKIPPED=()
+MANUAL=()
 
-# Install and setup Stow
-if ! command -v stow &> /dev/null
-then
-  echo "Stow not found, installing via homebrew"
-  brew install stow
-else
-  echo "Stow found ☑"
-fi
+GIT_NAME="${GIT_NAME:-}"
+GIT_EMAIL="${GIT_EMAIL:-}"
 
-if [ ! -L $HOME/.zshrc ]
-then
+log_step() { printf '\n\033[1;34m==>\033[0m %s\n' "$1"; }
+log_ok() { printf '    \033[32m☑\033[0m %s\n' "$1"; }
+log_do() { printf '    \033[33m→\033[0m %s\n' "$1"; }
+log_warn() { printf '    \033[31m!\033[0m %s\n' "$1"; }
 
-  echo "Running stow"
-  cd $HOME/.dotfiles
-  stow .
-  cd $HOME
-else
-  echo "Symlinks found ☑"
-fi
+have() { command -v "$1" >/dev/null 2>&1; }
 
-# Create this-env.sh
-if [ ! -f $HOME/zsh/this-env.sh ]
-then
-  echo "Creating .this-env.sh"
-  touch $HOME/zsh/this-env.sh
-else
-  echo "this-env.sh found ☑"
-fi
+require_macos() {
+  if [ "$(uname)" != "Darwin" ]; then
+    echo "Only macOS is supported by this script."
+    echo "Linux: the dotfiles themselves work, but install the packages manually."
+    exit 0
+  fi
+}
 
-# Cargo
-if ! command -v cargo &> /dev/null
-then
-  echo "Cargo not found, installing via curl"
-  curl https://sh.rustup.rs -sSf | sh
-else
-  echo "Cargo found ☑"
-fi
+xcode_clt() {
+  log_step "Xcode Command Line Tools"
+  if xcode-select -p >/dev/null 2>&1; then
+    log_ok "already installed"
+    SKIPPED+=("xcode-clt")
+    return
+  fi
+  log_do "installing (a GUI dialog will open)"
+  xcode-select --install
+  echo "    Press Enter once the Xcode CLT install has finished..."
+  read -r
+  INSTALLED+=("xcode-clt")
+}
 
-# GCC
-if ! command -v gcc &> /dev/null
-then
-  echo "GCC not found, installing via homebrew"
-  brew install gcc
-else
-  echo "GCC found ☑"
-fi
+homebrew() {
+  log_step "Homebrew"
+  if have brew; then
+    log_ok "already installed"
+    SKIPPED+=("homebrew")
+  else
+    log_do "installing"
+    NONINTERACTIVE=1 /bin/bash -c \
+      "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    INSTALLED+=("homebrew")
+  fi
 
-# Make
-if ! command -v make &> /dev/null
-then
-  echo "Make not found, installing via homebrew"
-  brew install make
-else
-  echo "Make found ☑"
-fi
+  if [ -x /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [ -x /usr/local/bin/brew ]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
+}
 
-# Ripgrep
-if ! command -v rg &> /dev/null
-then
-  echo "Ripgrep not found, installing via homebrew"
-  brew install ripgrep
-else
-  echo "Ripgrep found ☑"
-fi
+brew_bundle() {
+  log_step "Homebrew packages (Brewfile)"
+  if [ ! -f "$BREWFILE" ]; then
+    log_warn "no Brewfile at $BREWFILE, skipping"
+    return
+  fi
+  if brew bundle check --file="$BREWFILE" >/dev/null 2>&1; then
+    log_ok "all packages present"
+    SKIPPED+=("brewfile")
+    return
+  fi
+  log_do "installing missing packages"
+  brew bundle --file="$BREWFILE"
+  INSTALLED+=("brewfile")
+}
 
-# fzf
-if ! command -v fzf &> /dev/null
-then
-  echo "fzf not found, installing via homebrew"
-  brew install fzf
-else
-  echo "Fzf found ☑"
-fi
+rust() {
+  log_step "Rust toolchain"
+  if have rustup || [ -f "$HOME/.cargo/env" ]; then
+    log_ok "already installed"
+    SKIPPED+=("rustup")
+  else
+    log_do "installing via rustup.rs"
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+    INSTALLED+=("rustup")
+  fi
+  # shellcheck source=/dev/null
+  [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+}
 
-# Zoxide
-if ! command -v zoxide &> /dev/null
-then
-  echo "Zoxide not found, installing via cargo"
-  cargo install zoxide --locked
-else
-  echo "Zoxide found ☑"
+cargo_crates() {
+  log_step "Cargo crates"
+  if ! have cargo; then
+    log_warn "cargo unavailable, skipping"
+    return
+  fi
+  local crates=(eza zoxide rnvm tree-sitter-cli wasm-pack)
+  local installed_list
+  installed_list="$(cargo install --list 2>/dev/null)"
+  for crate in "${crates[@]}"; do
+    if grep -q "^$crate " <<<"$installed_list"; then
+      log_ok "$crate"
+      SKIPPED+=("$crate")
+    else
+      log_do "installing $crate"
+      cargo install "$crate" --locked
+      INSTALLED+=("$crate")
+    fi
+  done
+}
 
-fi
+uv_install() {
+  log_step "uv"
+  if have uv || [ -f "$HOME/.local/bin/env" ]; then
+    log_ok "already installed"
+    SKIPPED+=("uv")
+    return
+  fi
+  log_do "installing"
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  INSTALLED+=("uv")
+}
 
-# Eza
-if ! command -v eza &> /dev/null
-then
-  echo "Eza not found, installing via homebrew"
-  brew install eza
-else
-  echo "Eza found ☑"
+prune_dead_symlinks() {
+  log_step "Stale symlinks"
+  local found=0
+  while IFS= read -r link; do
+    log_do "removing dangling $link"
+    rm "$link"
+    found=1
+  done < <(find "$HOME" -maxdepth 1 -type l ! -exec test -e {} \; -print 2>/dev/null)
+  [ "$found" -eq 0 ] && log_ok "none found"
+}
 
-fi
+stow_dotfiles() {
+  log_step "Symlinks (stow)"
+  if ! have stow; then
+    log_warn "stow unavailable, skipping"
+    return
+  fi
 
-# Zsh
-if ! command -v zsh &> /dev/null
-then
-  echo "Zsh not found, installing via homebrew"
-  brew install zsh
-else
-  echo "Zsh found ☑"
+  local conflicts
+  conflicts="$(cd "$DOTFILES" && stow --no --verbose=1 --target="$HOME" . 2>&1 |
+    grep -i "existing target" || true)"
 
-fi
+  if [ -n "$conflicts" ]; then
+    log_warn "conflicts found, these real files block stow:"
+    sed 's/^/        /' <<<"$conflicts"
+    echo "    Move or delete them, then re-run. Or run with ADOPT=1 to let stow"
+    echo "    absorb them into the repo (review 'git diff' afterwards)."
+    if [ "${ADOPT:-0}" = "1" ]; then
+      log_do "adopting existing files"
+      (cd "$DOTFILES" && stow --adopt --target="$HOME" .)
+      INSTALLED+=("stow-adopt")
+    else
+      MANUAL+=("resolve stow conflicts, then re-run install.sh")
+      return
+    fi
+  else
+    (cd "$DOTFILES" && stow --restow --target="$HOME" .)
+    log_ok "linked"
+    INSTALLED+=("stow")
+  fi
+}
 
-# Source nvm so it's available in this shell instance
-if [ -f $(brew --prefix nvm)/nvm.sh ]
-then
-  echo "Sourcing nvm into shell ☑"
-  . $(brew --prefix nvm)/nvm.sh
-fi
+this_env() {
+  log_step "zsh/this-env.sh"
+  if [ -f "$HOME/zsh/this-env.sh" ]; then
+    log_ok "found"
+    SKIPPED+=("this-env.sh")
+    return
+  fi
+  log_do "creating empty this-env.sh"
+  touch "$HOME/zsh/this-env.sh"
+  MANUAL+=("fill in ~/zsh/this-env.sh with machine-specific env vars and tokens")
+  INSTALLED+=("this-env.sh")
+}
 
-# Nvm
-if ! command -v nvm &> /dev/null
-then
-  echo "nvm not found, installing via homebrew"
-  brew install nvm
-else
-  echo "nvm found ☑"
+SSH_KEY=""
+GIT_CONFIGURED=0
 
-fi
+git_prompt() {
+  log_step "Git identity"
+  local local_cfg="$HOME/.gitconfig.local"
 
-# Wezterm
-if ! command -v wezterm &> /dev/null
-then
-  echo "Wezterm not found, installing via homebrew (cask)"
-  brew install --cask wezterm
-else
-  echo "Wezterm found ☑"
-fi
+  if [ -f "$local_cfg" ] && grep -q "email" "$local_cfg"; then
+    log_ok "~/.gitconfig.local already configured"
+    SKIPPED+=("git-identity")
+    GIT_CONFIGURED=1
+    return
+  fi
 
-# Starship prompt
-if ! command -v starship &> /dev/null
-then
-  echo "Starship not found, installing via homebrew"
-  brew install starship
-else
-  echo "Starship found ☑"
-fi
+  printf '    Git user.name [%s]: ' "${GIT_NAME:-}"
+  read -r reply
+  GIT_NAME="${reply:-${GIT_NAME:-}}"
+  printf '    Git user.email [%s]: ' "${GIT_EMAIL:-}"
+  read -r reply
+  GIT_EMAIL="${reply:-${GIT_EMAIL:-}}"
+}
 
+ssh_setup() {
+  log_step "SSH key for GitHub"
 
-# Zsh-Autosuggestions
-if ! brew ls --versions zsh-autosuggestions > /dev/null;
-then
-  echo "Installing zsh-autosuggestions"
-  brew install zsh-autosuggestions
-else
-  echo "zsh-autosuggestions found ☑"
-fi
+  if [ -f "$HOME/.ssh/config" ] && grep -q "Host github.com" "$HOME/.ssh/config"; then
+    SSH_KEY="$(awk '/Host github.com/{f=1} f&&/IdentityFile/{print $2; exit}' "$HOME/.ssh/config")"
+    SSH_KEY="${SSH_KEY/#\~/$HOME}"
+    log_ok "github.com entry already in ~/.ssh/config (${SSH_KEY})"
+    SKIPPED+=("ssh-key")
+    return
+  fi
 
-# Zsh-Syntax-Highlighting
-if ! brew ls --versions zsh-syntax-highlighting > /dev/null;
-then
-  echo "Installing zsh-syntax-highlighting"
-  brew install zsh-autosuggestions
-else
-  echo "zsh-syntax-highlighting found ☑"
-fi
+  local default_name="${USER}_$(hostname -s)"
+  printf '    Key name [%s]: ' "$default_name"
+  read -r key_name
+  key_name="${key_name:-$default_name}"
+  SSH_KEY="$HOME/.ssh/$key_name"
 
-# Neovim
-if ! command -v nvim &> /dev/null
-then
-  echo "===================="
-  echo "Neovim not found, please install from the following link"
-  echo "https://github.com/neovim/neovim/blob/master/INSTALL.md"
-  echo "===================="
-else
-  echo "Neovim found ☑"
-fi
+  mkdir -p "$HOME/.ssh"
+  chmod 700 "$HOME/.ssh"
 
-# Font download prompt
-echo "Download font of choice from https://www.nerdfonts.com/font-downloads"
-echo "(0xProto Nerd Font) is my current preference"
+  if [ -f "$SSH_KEY" ]; then
+    log_ok "key $SSH_KEY already exists"
+  else
+    log_do "generating ed25519 key"
+    ssh-keygen -t ed25519 -C "${GIT_EMAIL:-$key_name}" -f "$SSH_KEY" -N ""
+    INSTALLED+=("ssh-key")
+  fi
 
-echo ".dotfile installation script complete!"
-echo "===================="
+  log_do "adding github.com to ~/.ssh/config"
+  cat >>"$HOME/.ssh/config" <<EOF
+
+Host github.com
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/$key_name
+EOF
+  chmod 600 "$HOME/.ssh/config"
+
+  ssh-add --apple-use-keychain "$SSH_KEY" 2>/dev/null || true
+
+  local title
+  title="$(hostname -s)"
+  if have gh && gh auth status >/dev/null 2>&1; then
+    log_do "uploading key to GitHub via gh"
+    gh ssh-key add "$SSH_KEY.pub" --title "$title" --type authentication || true
+    gh ssh-key add "$SSH_KEY.pub" --title "$title (signing)" --type signing || true
+  else
+    pbcopy <"$SSH_KEY.pub"
+    log_warn "gh not authenticated. Public key copied to clipboard."
+    echo "    Add it at https://github.com/settings/keys as BOTH:"
+    echo "      - Authentication key"
+    echo "      - Signing key   (required, commit.gpgsign is on)"
+    echo "    Or run 'gh auth login' later, then:"
+    echo "      gh ssh-key add $SSH_KEY.pub --title '$title' --type authentication"
+    echo "      gh ssh-key add $SSH_KEY.pub --title '$title (signing)' --type signing"
+    echo "    Press Enter once added..."
+    read -r
+  fi
+
+  log_do "verifying GitHub SSH access"
+  ssh -o StrictHostKeyChecking=accept-new -T git@github.com 2>&1 | sed 's/^/        /' || true
+}
+
+git_identity() {
+  local local_cfg="$HOME/.gitconfig.local"
+  [ "$GIT_CONFIGURED" = "1" ] && return
+
+  log_step "Writing git identity"
+  log_do "writing $local_cfg"
+  cat >"$local_cfg" <<EOF
+[user]
+	name = ${GIT_NAME:-}
+	email = ${GIT_EMAIL:-}
+EOF
+
+  if [ -n "$SSH_KEY" ] && [ -f "$SSH_KEY.pub" ]; then
+    printf '\tsigningkey = %s\n' "$SSH_KEY.pub" >>"$local_cfg"
+  else
+    MANUAL+=("set user.signingkey in ~/.gitconfig.local")
+  fi
+
+  INSTALLED+=("git-identity")
+}
+
+login_shell() {
+  log_step "Login shell"
+  local brew_zsh
+  brew_zsh="$(brew --prefix 2>/dev/null)/bin/zsh"
+
+  if [ ! -x "$brew_zsh" ]; then
+    log_ok "using system zsh (homebrew zsh not installed)"
+    SKIPPED+=("login-shell")
+    return
+  fi
+  if [ "$SHELL" = "$brew_zsh" ]; then
+    log_ok "already $brew_zsh"
+    SKIPPED+=("login-shell")
+    return
+  fi
+
+  grep -qxF "$brew_zsh" /etc/shells || {
+    log_do "adding $brew_zsh to /etc/shells (needs sudo)"
+    echo "$brew_zsh" | sudo tee -a /etc/shells >/dev/null
+  }
+  log_do "setting login shell to $brew_zsh"
+  chsh -s "$brew_zsh"
+  INSTALLED+=("login-shell")
+}
+
+node_runtime() {
+  log_step "Node (rnvm)"
+  if ! have rnvm; then
+    log_warn "rnvm unavailable, skipping"
+    return
+  fi
+  if [ -n "$(ls -A "$HOME/.rnvm" 2>/dev/null | grep -E '^[0-9]+\.' || true)" ]; then
+    log_ok "a node version is already installed"
+    SKIPPED+=("node")
+    return
+  fi
+  log_do "installing latest LTS node"
+  rnvm install --lts || MANUAL+=("install node with 'rnvm install --lts'")
+  INSTALLED+=("node")
+}
+
+opencode_plugins() {
+  log_step "opencode plugin deps"
+  local plugin_dir="$HOME/.config/opencode/plugins/no-external-skills"
+  if [ ! -f "$plugin_dir/package.json" ]; then
+    log_ok "no plugins to build"
+    return
+  fi
+  if [ -d "$plugin_dir/node_modules" ]; then
+    log_ok "dependencies present"
+    SKIPPED+=("opencode-plugins")
+    return
+  fi
+  if ! have bun; then
+    MANUAL+=("run 'bun install' in $plugin_dir")
+    log_warn "bun unavailable"
+    return
+  fi
+  log_do "bun install"
+  (cd "$plugin_dir" && bun install)
+  INSTALLED+=("opencode-plugins")
+}
+
+summary() {
+  printf '\n\033[1;34m====================\033[0m\n'
+  printf '\033[1mInstall complete\033[0m\n\n'
+
+  if [ "${#INSTALLED[@]}" -gt 0 ]; then
+    printf '  Changed:  %s\n' "${INSTALLED[*]}"
+  fi
+  if [ "${#SKIPPED[@]}" -gt 0 ]; then
+    printf '  Already:  %s\n' "${SKIPPED[*]}"
+  fi
+
+  if [ "${#MANUAL[@]}" -gt 0 ]; then
+    printf '\n\033[1;33mManual follow-up:\033[0m\n'
+    for item in "${MANUAL[@]}"; do
+      printf '  - %s\n' "$item"
+    done
+  fi
+
+  printf '\n  Link project configs with:\n'
+  printf '    ./install/link-project.sh commons ~/path/to/commons\n'
+  printf '\n  Restart your terminal to pick up the new shell config.\n'
+  printf '\033[1;34m====================\033[0m\n'
+}
+
+main() {
+  require_macos
+  printf '\033[1;34m====================\033[0m\n'
+  printf '\033[1mRunning .dotfiles installation\033[0m\n'
+
+  xcode_clt
+  homebrew
+  brew_bundle
+  rust
+  cargo_crates
+  uv_install
+  prune_dead_symlinks
+  stow_dotfiles
+  this_env
+  git_prompt
+  ssh_setup
+  git_identity
+  login_shell
+  node_runtime
+  opencode_plugins
+  summary
+}
+
+main "$@"

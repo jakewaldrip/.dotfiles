@@ -1,0 +1,29 @@
+[include]
+	path = ~/.gitconfig.local
+
+[alias]
+	co = !HUSKY=0 git checkout
+	com = !HUSKY=0 git checkout master
+	cb = !HUSKY=0 git checkout -b
+
+[credential]
+	helper = store
+
+[push]
+	autoSetupRemote = true
+
+[commit]
+	gpgsign = true
+
+[gpg]
+	format = ssh
+
+[rerere]
+	enabled = true
+
+[diff]
+	external = difft
+
+[core]
+	untrackedCache = true
+	fsmonitor = true

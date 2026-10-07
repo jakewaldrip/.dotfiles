@@ -12,7 +12,7 @@ export ZDIR=$HOME/zsh
 
 # Sourcing
 source $ZDIR/alias.sh
-source $ZDIR/this-env.sh
+[ -f $ZDIR/this-env.sh ] && source $ZDIR/this-env.sh
 export PATH="$ZDIR/scripts:$PATH"
 
 # Lazy load all plugins
@@ -21,7 +21,7 @@ for f in $ZDIR/plugins/*; do
 done
 
 # Prompt. To customize, edit ~/.config/starship.toml.
-eval "$(starship init zsh)"
+command -v starship >/dev/null && eval "$(starship init zsh)"
 
 # Better history setup
 HISTFILE=$HOME/.zhistory
@@ -42,21 +42,24 @@ export PATH=$opencode_path:$PATH
 export OPENCODE_DISABLE_EXTERNAL_SKILLS=1
 
 if [[ "$(uname)" == "Darwin" ]]; then
-  source $package_path/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-  source $package_path/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  zsh_plugin_dir="$package_path/share"
 else
-  source $package_path/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-  source $package_path/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  zsh_plugin_dir="$package_path/zsh/plugins"
 fi
 
+for plugin in zsh-autosuggestions zsh-syntax-highlighting; do
+  [ -f "$zsh_plugin_dir/$plugin/$plugin.zsh" ] && source "$zsh_plugin_dir/$plugin/$plugin.zsh"
+done
+unset zsh_plugin_dir plugin
+
 # bun completions
-[ -s "/Users/jacob.waldrip/.bun/_bun" ] && source "/Users/jacob.waldrip/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-. "$HOME/.local/bin/env"
+[ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
 
 # Deduplicate PATH entries (keep first occurrence, preserve order)
 typeset -U path PATH
