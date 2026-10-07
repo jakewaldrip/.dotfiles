@@ -13,10 +13,12 @@ brew "ripgrep"
 brew "fd"
 brew "jq"
 brew "difftastic"
+brew "coreutils"
 
 # Git / VCS
 brew "gh"
 brew "withgraphite/tap/graphite"
+brew "pre-commit"
 
 # Editor + LSP
 brew "neovim"
@@ -40,3 +42,5 @@ brew "tflint"
 # Casks
 cask "ghostty"
 cask "font-0xproto-nerd-font"
+cask "gcloud-cli"
+cask "dbeaver-community"

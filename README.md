@@ -19,7 +19,7 @@ The script is idempotent. Re-run it any time to pick up new tools.
 | Xcode CLT | Installs if missing (provides `gcc`, `make`, `git`) |
 | Homebrew | Installs if missing, then runs `brew bundle` against `install/Brewfile` |
 | Rust | `rustup` via rustup.rs, then the cargo crates: `eza`, `zoxide`, `rnvm`, `tree-sitter-cli` |
-| uv | Python package manager |
+| uv | Python package manager, then `uv tool install pybritive` |
 | opencode | v2 via `curl -fsSL https://opencode.ai/v2/install \| bash`, into `~/.opencode/bin` |
 | Symlinks | `stow --restow` into `$HOME`, after pruning dangling links |
 | `this-env.sh` | Creates an empty one if missing |
@@ -56,6 +56,32 @@ git -C ~/.dotfiles diff   # review what was absorbed
 - Fill in `~/zsh/this-env.sh` with machine-specific env vars and tokens. It is
   gitignored and starts empty.
 - Sign in to GUI apps.
+
+## commons and nvm
+
+The commons repo pins Node through `.nvmrc` and `scripts/cli/.zsh_cityblock`,
+which lazy-loads nvm and replaces `node`, `npm`, `npx`, `pnpm`, `pnpx`, and
+`corepack` with shell functions.
+
+These dotfiles use `rnvm` instead and deliberately do **not** source that file.
+Sourcing it would shadow rnvm-managed Node.
+
+The Brewfile already covers the machine-level tools that commons'
+`scripts/cli/dev_setup.sh` installs: `coreutils`, `pre-commit`, `bun`, `tenv`,
+`tflint`, `gcloud-cli`, `dbeaver-community`, and `pybritive`. What it does not
+cover is repo-specific and needs the checkout plus Britive auth: `.env` from
+Secret Manager, the dev and test databases, GAR npm auth, cloud-sql-proxy, and
+`pnpm install`.
+
+If you need those, run the subsystems individually:
+
+```sh
+pnpm dev-setup --dotenv --dev-db
+```
+
+Avoid the `shell` subsystem. It appends a `source .zsh_cityblock` line to
+`~/.zshrc`, which is a symlink into this repo, so it would modify a tracked file
+and break rnvm.
 
 ## Project configs
 

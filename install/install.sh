@@ -122,6 +122,26 @@ uv_install() {
   INSTALLED+=("uv")
 }
 
+uv_tools() {
+  log_step "uv tools"
+  if ! have uv && [ ! -x "$HOME/.local/bin/uv" ]; then
+    log_warn "uv unavailable, skipping"
+    MANUAL+=("run 'uv tool install pybritive'")
+    return
+  fi
+  local uv_bin
+  uv_bin="$(command -v uv || echo "$HOME/.local/bin/uv")"
+
+  if "$uv_bin" tool list 2>/dev/null | grep -q '^pybritive'; then
+    log_ok "pybritive"
+    SKIPPED+=("pybritive")
+    return
+  fi
+  log_do "installing pybritive"
+  "$uv_bin" tool install pybritive
+  INSTALLED+=("pybritive")
+}
+
 opencode_install() {
   log_step "opencode v2"
   if [ -x "$HOME/.opencode/bin/opencode" ]; then
@@ -393,6 +413,7 @@ main() {
   rust
   cargo_crates
   uv_install
+  uv_tools
   opencode_install
   prune_dead_symlinks
   stow_dotfiles
