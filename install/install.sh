@@ -4,6 +4,8 @@ set -uo pipefail
 DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
 BREWFILE="$DOTFILES/install/Brewfile"
 
+export RNVM_DIR="${RNVM_DIR:-$HOME/.rnvm}"
+
 INSTALLED=()
 SKIPPED=()
 MANUAL=()
@@ -353,7 +355,8 @@ node_runtime() {
     MANUAL+=("install node with 'rnvm install <version>'")
     return
   fi
-  if [ -n "$(ls -A "$HOME/.rnvm" 2>/dev/null | grep -E '^[0-9]+\.' || true)" ]; then
+  mkdir -p "$RNVM_DIR"
+  if [ -n "$(ls -A "$RNVM_DIR" 2>/dev/null | grep -E '^[0-9]+\.' || true)" ]; then
     log_ok "a node version is already installed"
     SKIPPED+=("node")
     return
