@@ -95,7 +95,7 @@ cargo_crates() {
     log_warn "cargo unavailable, skipping"
     return
   fi
-  local crates=(eza zoxide rnvm tree-sitter-cli wasm-pack)
+  local crates=(eza zoxide rnvm tree-sitter-cli)
   local installed_list
   installed_list="$(cargo install --list 2>/dev/null)"
   for crate in "${crates[@]}"; do
@@ -120,6 +120,18 @@ uv_install() {
   log_do "installing"
   curl -LsSf https://astral.sh/uv/install.sh | sh
   INSTALLED+=("uv")
+}
+
+opencode_install() {
+  log_step "opencode v2"
+  if [ -x "$HOME/.opencode/bin/opencode" ]; then
+    log_ok "already installed ($("$HOME/.opencode/bin/opencode" --version 2>/dev/null))"
+    SKIPPED+=("opencode")
+    return
+  fi
+  log_do "installing via opencode.ai installer"
+  curl -fsSL https://opencode.ai/v2/install | bash
+  INSTALLED+=("opencode")
 }
 
 prune_dead_symlinks() {
@@ -381,6 +393,7 @@ main() {
   rust
   cargo_crates
   uv_install
+  opencode_install
   prune_dead_symlinks
   stow_dotfiles
   this_env

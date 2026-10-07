@@ -18,8 +18,9 @@ The script is idempotent. Re-run it any time to pick up new tools.
 |---|---|
 | Xcode CLT | Installs if missing (provides `gcc`, `make`, `git`) |
 | Homebrew | Installs if missing, then runs `brew bundle` against `install/Brewfile` |
-| Rust | `rustup` via rustup.rs, then the cargo crates: `eza`, `zoxide`, `rnvm`, `tree-sitter-cli`, `wasm-pack` |
+| Rust | `rustup` via rustup.rs, then the cargo crates: `eza`, `zoxide`, `rnvm`, `tree-sitter-cli` |
 | uv | Python package manager |
+| opencode | v2 via `curl -fsSL https://opencode.ai/v2/install \| bash`, into `~/.opencode/bin` |
 | Symlinks | `stow --restow` into `$HOME`, after pruning dangling links |
 | `this-env.sh` | Creates an empty one if missing |
 | SSH | Generates an ed25519 key, writes `~/.ssh/config`, uploads to GitHub as both an auth and a signing key |
