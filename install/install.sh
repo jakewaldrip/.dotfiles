@@ -340,10 +340,17 @@ login_shell() {
   INSTALLED+=("login-shell")
 }
 
+latest_lts() {
+  have jq || return 1
+  curl -fsSL --max-time 10 https://nodejs.org/dist/index.json 2>/dev/null |
+    jq -r 'first(.[] | select(.lts != false) | .version) | ltrimstr("v")' 2>/dev/null
+}
+
 node_runtime() {
   log_step "Node (rnvm)"
   if ! have rnvm; then
     log_warn "rnvm unavailable, skipping"
+    MANUAL+=("install node with 'rnvm install <version>'")
     return
   fi
   if [ -n "$(ls -A "$HOME/.rnvm" 2>/dev/null | grep -E '^[0-9]+\.' || true)" ]; then
@@ -351,9 +358,29 @@ node_runtime() {
     SKIPPED+=("node")
     return
   fi
-  log_do "installing latest LTS node"
-  rnvm install --lts || MANUAL+=("install node with 'rnvm install --lts'")
-  INSTALLED+=("node")
+
+  local default_version
+  default_version="${NODE_VERSION:-$(latest_lts)}"
+
+  # rnvm needs an exact semver; it rejects "lts" and bare majors.
+  printf '    Node version to install, x.y.z [%s]: ' "${default_version:-skip}"
+  read -r version
+  version="${version:-$default_version}"
+
+  if [ -z "$version" ]; then
+    log_warn "no version given, skipping"
+    MANUAL+=("install node with 'rnvm install <version>'")
+    return
+  fi
+
+  log_do "installing node $version"
+  if rnvm install "$version"; then
+    rnvm use "$version" >/dev/null 2>&1 || true
+    INSTALLED+=("node-$version")
+  else
+    log_warn "rnvm install $version failed"
+    MANUAL+=("install node with 'rnvm install <version>'")
+  fi
 }
 
 opencode_plugins() {
